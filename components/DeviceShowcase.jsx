@@ -215,11 +215,11 @@ function DefaultDesktopPanels({ project }) {
 
 function GuidesMobilePhone({ project }) {
   return (
-    <div className="mx-auto w-[min(100%,13.4rem)] min-w-0 rounded-[2.2rem] border-[8px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)] sm:w-[min(100%,15rem)]">
+    <div className="mx-auto w-[min(100%,12.6rem)] min-w-0 rounded-[2.2rem] border-[7px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)] sm:w-[min(100%,15rem)] sm:border-[8px]">
       <div className="rounded-[1.7rem] bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152] p-3">
         <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
 
-        <div className="mt-3 h-[17.8rem] overflow-hidden rounded-2xl border border-[#ddca89] bg-[#f8e374] p-1.5">
+        <div className="mt-3 h-[15.4rem] overflow-hidden rounded-2xl border border-[#ddca89] bg-[#f8e374] p-1.5 sm:h-[17.8rem]">
           <GuidesPoster project={project} compact />
         </div>
       </div>
@@ -229,7 +229,7 @@ function GuidesMobilePhone({ project }) {
 
 function DefaultMobilePhone({ project }) {
   return (
-    <div className="mx-auto w-[min(100%,13.4rem)] min-w-0 rounded-[2.2rem] border-[8px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)] sm:w-[min(100%,15rem)]">
+    <div className="mx-auto w-[min(100%,12.6rem)] min-w-0 rounded-[2.2rem] border-[7px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)] sm:w-[min(100%,15rem)] sm:border-[8px]">
       <div className={`rounded-[1.7rem] bg-gradient-to-br p-4 ${project.gradient}`}>
         <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
         <p className="mt-4 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-zinc-800/72">
@@ -312,6 +312,7 @@ export default function DeviceShowcase() {
       index: wheelIndex,
     };
   });
+  const mobilePreviewProjects = mobileWheelProjects.slice(0, 3);
 
   const jumpToProject = (index) => {
     const target = stepRefs.current[index];
@@ -326,7 +327,7 @@ export default function DeviceShowcase() {
   };
 
   return (
-    <section id="work" className="px-0 pb-10 pt-4 sm:px-4 sm:pt-8 lg:px-8">
+    <section id="work" className="overflow-x-clip px-0 pb-10 pt-4 sm:px-4 sm:pt-8 lg:px-8">
       <div className="mx-auto mb-2 max-w-5xl px-4 md:hidden">
         <p className="inline-flex rounded-full border border-zinc-900/12 bg-white/85 px-3 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-zinc-700 shadow-sm">
           Selected Work
@@ -353,7 +354,7 @@ export default function DeviceShowcase() {
             <ProgressRail activeIndex={activeIndex} onSelect={jumpToProject} />
 
             <div className="h-full max-w-full overflow-hidden rounded-none border border-[#d9cdbf] bg-[#fffaf3] shadow-[0_22px_70px_rgba(87,60,18,0.15)] sm:rounded-[2.5rem]">
-              <div className="grid h-full grid-rows-[42svh_minmax(0,1fr)_auto] sm:grid-rows-[47svh_minmax(0,1fr)_auto] lg:grid-cols-[0.38fr_0.62fr] lg:grid-rows-1">
+              <div className="grid h-full grid-rows-[38svh_minmax(0,1fr)_auto] sm:grid-rows-[47svh_minmax(0,1fr)_auto] lg:grid-cols-[0.38fr_0.62fr] lg:grid-rows-1">
                 <div
                   className={`order-1 relative overflow-hidden border-b border-[#decfbf] bg-gradient-to-br ${activeProject.gradient} lg:order-2 lg:border-b-0 lg:border-l`}
                 >
@@ -417,13 +418,13 @@ export default function DeviceShowcase() {
                   </AnimatePresence>
                 </div>
 
-                <aside className="order-2 flex min-w-0 flex-col overflow-y-auto overflow-x-hidden bg-white/92 px-4 pb-3 pt-4 lg:order-1 lg:overflow-hidden lg:px-7 lg:py-8">
+                <aside className="order-2 flex min-h-0 min-w-0 flex-col overflow-y-auto overflow-x-hidden bg-white/92 px-4 pb-3 pt-4 lg:order-1 lg:overflow-hidden lg:px-7 lg:py-8">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-zinc-600">
                     Now showing
                   </p>
 
-                  <div className="mt-2 flex items-start justify-between gap-3">
-                    <h3 className="break-words text-[2.05rem] leading-[1.03] font-bold text-zinc-950 sm:text-4xl">
+                  <div className="mt-2 flex min-w-0 items-start justify-between gap-3">
+                    <h3 className="min-w-0 break-words text-[1.78rem] leading-[1.03] font-bold text-zinc-950 sm:text-4xl">
                       {activeProject.name}
                     </h3>
                     {activeProject.logo?.src ? (
@@ -445,7 +446,7 @@ export default function DeviceShowcase() {
                     </span>
                   </div>
 
-                  <p className="mt-3 text-sm leading-6 text-zinc-700 sm:text-base sm:leading-7">
+                  <p className="mt-3 break-words text-sm leading-6 text-zinc-700 sm:text-base sm:leading-7">
                     {activeProject.summary}
                   </p>
 
@@ -453,7 +454,7 @@ export default function DeviceShowcase() {
                     {activeProject.highlights.map((highlight, index) => (
                       <li
                         key={highlight}
-                        className={`items-start gap-2 ${index > 1 ? "hidden sm:flex" : "flex"}`}
+                        className={`min-w-0 items-start gap-2 break-words ${index > 1 ? "hidden sm:flex" : "flex"}`}
                       >
                         <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-amber-400" />
                         {highlight}
@@ -463,7 +464,7 @@ export default function DeviceShowcase() {
 
                   {activeProject.showcase?.appStoreBadge &&
                   activeProject.showcase?.googlePlayBadge ? (
-                    <div className="mt-4 grid grid-cols-2 gap-2 lg:hidden">
+                    <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:hidden">
                       <a
                         href={activeProject.showcase.appStoreUrl}
                         target="_blank"
@@ -518,15 +519,15 @@ export default function DeviceShowcase() {
                 </aside>
 
                 <div className="order-3 border-t border-[#decfbf] bg-white/96 px-3 py-1.5 lg:hidden">
-                  <div className="overflow-x-auto pb-0.5 pr-24 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="overflow-hidden pb-0.5">
                     <motion.div
                       key={activeProject.slug}
                       initial={{ x: 14, opacity: 0.86 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ duration: 0.28, ease: "easeOut" }}
-                      className="flex min-w-max items-center gap-1.5"
+                      className="grid grid-cols-4 items-center gap-1.5"
                     >
-                      {mobileWheelProjects.map((project, wheelOrder) => {
+                      {mobilePreviewProjects.map((project, wheelOrder) => {
                         const isActiveWheelItem = wheelOrder === 0;
 
                         return (
@@ -534,17 +535,19 @@ export default function DeviceShowcase() {
                             key={`${project.slug}-mobile-pill-${wheelOrder}`}
                             type="button"
                             onClick={() => jumpToProject(project.index)}
-                            className={`inline-flex items-center justify-center rounded-full text-[0.62rem] font-semibold uppercase tracking-[0.14em] transition ${
+                            className={`min-w-0 rounded-full px-2.5 py-1.5 text-[0.58rem] font-semibold uppercase tracking-[0.12em] transition ${
                               isActiveWheelItem
-                                ? "min-w-[8.1rem] bg-zinc-900 px-3.5 py-1.5 text-white"
-                                : "min-w-[4.35rem] border border-zinc-900/14 bg-white px-2.5 py-1.5 text-zinc-700 hover:bg-zinc-100"
+                                ? "col-span-2 bg-zinc-900 text-white"
+                                : "col-span-1 border border-zinc-900/14 bg-white text-zinc-700 hover:bg-zinc-100"
                             }`}
                             aria-label={`Jump to ${project.name}`}
                             aria-pressed={project.index === activeIndex}
                           >
-                            {isActiveWheelItem
-                              ? project.name
-                              : (project.shortName || project.name)}
+                            <span className="block min-w-0 truncate text-center">
+                              {isActiveWheelItem
+                                ? project.name
+                                : (project.shortName || project.name)}
+                            </span>
                           </button>
                         );
                       })}
