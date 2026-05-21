@@ -41,9 +41,10 @@ export default function PortfolioPage() {
     window.setTimeout(() => {
       const target = document.getElementById(sectionId);
       if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        const top = target.getBoundingClientRect().top + window.scrollY - 8;
+        window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
       }
-    }, 120);
+    }, 430);
   };
 
   return (

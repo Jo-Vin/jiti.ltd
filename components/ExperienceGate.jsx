@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Code2, Sparkles } from "lucide-react";
 
-const AUTO_START_SECONDS = 8;
+const AUTO_START_SECONDS = 10;
 
 export default function ExperienceGate({ visible, onSelect, onSkip }) {
   const [countdown, setCountdown] = useState(AUTO_START_SECONDS);
@@ -38,14 +38,19 @@ export default function ExperienceGate({ visible, onSelect, onSkip }) {
           className="fixed inset-0 z-[65] overflow-y-auto bg-[#f3ebde]/85 p-3 backdrop-blur-md sm:p-7"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          exit={{ opacity: 0, transition: { duration: 0.4, ease: "easeInOut" } }}
         >
           <motion.div
             className="mx-auto my-3 w-full max-w-4xl rounded-[1.7rem] border border-[#dccfbe] bg-[#fffaf3]/96 p-4 text-zinc-900 shadow-[0_30px_70px_rgba(80,56,16,0.16)] sm:my-0 sm:rounded-[2rem] sm:p-8"
             initial={{ y: 20, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 10, opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
+            exit={{
+              y: 16,
+              opacity: 0,
+              scale: 0.985,
+              transition: { duration: 0.4, ease: "easeInOut" },
+            }}
+            transition={{ duration: 0.38, ease: "easeOut" }}
           >
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-700/70">
               Guided journey

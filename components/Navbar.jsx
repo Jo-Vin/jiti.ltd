@@ -7,7 +7,7 @@ import {
   Mail,
   Menu,
   MessageCircle,
-  ShieldCheck,
+  Star,
   Sparkles,
   Wrench,
   X,
@@ -17,6 +17,7 @@ import { contact, navLinks } from "@/data/siteData";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -45,6 +46,16 @@ export default function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 12);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <motion.header
       className="relative z-40 mx-auto mt-3 w-[calc(100%-1rem)] max-w-6xl"
@@ -53,10 +64,10 @@ export default function Navbar() {
       transition={{ duration: 0.5, ease: "easeOut", delay: 1.9 }}
     >
       <nav
-        className="flex items-center justify-between rounded-full border border-[#dacdbd] bg-white/80 px-3 py-2 text-sm shadow-[0_14px_40px_rgba(84,58,20,0.12)] backdrop-blur-xl sm:px-5"
+        className="flex items-center justify-between rounded-full border border-[#dacdbd] bg-white/80 pl-4 pr-3 py-2 text-sm shadow-[0_14px_40px_rgba(84,58,20,0.12)] backdrop-blur-xl sm:px-5"
         aria-label="Primary"
       >
-        <a href="#main-content" className="group flex items-center text-zinc-950">
+        <a href="#main-content" className="group flex items-center pl-1 text-zinc-950 sm:pl-0">
           <Image
             src="/logos/Jiti_Logo_Black.png"
             alt="Jiti Ltd"
@@ -99,11 +110,18 @@ export default function Navbar() {
           </a>
         </div>
 
-        <div ref={menuRef} className="relative md:hidden">
+        <div
+          ref={menuRef}
+          className={`fixed right-[calc(0.7rem+env(safe-area-inset-right))] z-[78] transition-[top] duration-300 md:hidden ${
+            hasScrolled
+              ? "top-[calc(0.85rem+env(safe-area-inset-top))]"
+              : "top-[calc(0.6rem+env(safe-area-inset-top))]"
+          }`}
+        >
           <button
             type="button"
             onClick={() => setMenuOpen((current) => !current)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-900/14 bg-white/90 text-zinc-900 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-900/14 bg-white/92 text-zinc-900 shadow-[0_10px_26px_rgba(0,0,0,0.12)] transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
             aria-expanded={menuOpen}
             aria-label="Open navigation menu"
           >
@@ -147,13 +165,13 @@ export default function Navbar() {
                     </span>
                   </a>
                   <a
-                    href="#proof"
+                    href="#reviews"
                     onClick={() => setMenuOpen(false)}
                     className="inline-flex items-center justify-between rounded-xl border border-zinc-900/10 bg-white/86 px-3 py-2 text-sm font-medium text-zinc-900"
                   >
                     <span className="inline-flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4" />
-                      Social proof
+                      <Star className="h-4 w-4" />
+                      Reviews
                     </span>
                   </a>
                   <a

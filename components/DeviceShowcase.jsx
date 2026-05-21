@@ -376,6 +376,7 @@ export default function DeviceShowcase() {
   }, [activeIndex]);
 
   const activeProject = projects[activeIndex];
+  const hasActiveLogo = Boolean(activeProject.logo?.src);
   const isFinalProject = activeIndex === projects.length - 1;
   const isGuidesActive = activeProject.slug === "guides-app";
   const mobileWheelProjects = projects.map((_, offset) => {
@@ -450,7 +451,7 @@ export default function DeviceShowcase() {
                 <button
                   type="button"
                   onClick={jumpToNextProject}
-                  className="absolute right-0 top-1/2 z-30 -translate-y-1/2 rounded-l-xl border border-r-0 border-zinc-900/12 bg-white/90 py-2 pl-2 pr-1 shadow-sm backdrop-blur lg:hidden"
+                  className="absolute right-0 top-[18.5svh] z-30 -translate-y-1/2 rounded-l-xl border border-r-0 border-zinc-900/12 bg-white/90 py-2 pl-2 pr-1 shadow-sm backdrop-blur lg:hidden"
                   aria-label="Scroll to next project"
                 >
                   <div className="flex h-28 flex-col items-center justify-between">
@@ -540,12 +541,16 @@ export default function DeviceShowcase() {
                     Now showing
                   </p>
 
-                  <div className="mt-2 flex min-w-0 items-start justify-between gap-3">
-                    <h3 className="min-w-0 break-words text-[1.78rem] leading-[1.03] font-bold text-zinc-950 sm:text-4xl">
+                  <div className="relative mt-2 min-w-0">
+                    <h3
+                      className={`min-w-0 break-words text-[1.78rem] leading-[1.03] font-bold text-zinc-950 sm:text-4xl ${
+                        hasActiveLogo ? "pr-15" : ""
+                      }`}
+                    >
                       {activeProject.name}
                     </h3>
-                    {activeProject.logo?.src ? (
-                      <div className="mt-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-zinc-900/10 bg-white/88 p-1.5 shadow-sm">
+                    {hasActiveLogo ? (
+                      <div className="absolute right-0 top-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-zinc-900/10 bg-white/88 p-1.5 shadow-sm">
                         <Image
                           src={activeProject.logo.src}
                           alt={activeProject.logo.alt || `${activeProject.name} logo`}

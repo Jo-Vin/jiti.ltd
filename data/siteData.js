@@ -1,7 +1,7 @@
 export const navLinks = [
   { href: "#work", label: "Work" },
   { href: "#services", label: "Services" },
-  { href: "#proof", label: "Proof" },
+  { href: "#reviews", label: "Reviews" },
   { href: "#why-jiti", label: "Why Jiti" },
   { href: "#contact", label: "Contact" },
 ];
@@ -233,16 +233,20 @@ export const whyJiti = [
 ];
 
 export const socialProof = {
-  legacyBrand: "Vouker",
-  sourceLabel: "vouker.com",
-  sourceUrl: "https://vouker.com/",
   totalReviews: 9,
   rating: 5,
-  headline:
-    "Client results from our former brand, now carried into Jiti Ltd.",
+  headline: "Client feedback from real projects delivered by our team.",
 };
 
 export const testimonials = [
+  {
+    quote:
+      "The service we received went above and beyond website development. Jo-Vin brought depth across business and product decisions, guided us through visual directions, and delivered a final result that lines up perfectly with our brand.",
+    shortQuote:
+      "The service went above and beyond, and the final result lines up perfectly with our brand.",
+    author: "Alexandra Hyde",
+    company: "Shrink My House",
+  },
   {
     quote:
       "Great designer who matched my expectations, very efficient and professional.",
@@ -254,12 +258,6 @@ export const testimonials = [
       "Surpassed my expectations with attention to detail and produced a fantastic logo.",
     author: "Dee Banks",
     company: "China Unboxed",
-  },
-  {
-    quote:
-      "The service we received went above and beyond website development.",
-    author: "Alexandra Hyde",
-    company: "Shrink my House",
   },
   {
     quote:
