@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { projects } from "@/data/siteData";
 
@@ -354,7 +354,7 @@ export default function DeviceShowcase() {
             <ProgressRail activeIndex={activeIndex} onSelect={jumpToProject} />
 
             <div className="h-full max-w-full overflow-hidden rounded-none border border-[#d9cdbf] bg-[#fffaf3] shadow-[0_22px_70px_rgba(87,60,18,0.15)] sm:rounded-[2.5rem]">
-              <div className="grid h-full grid-rows-[38svh_minmax(0,1fr)_auto] sm:grid-rows-[47svh_minmax(0,1fr)_auto] lg:grid-cols-[0.38fr_0.62fr] lg:grid-rows-1">
+              <div className="grid h-full grid-rows-[46svh_minmax(0,1fr)_auto] sm:grid-rows-[47svh_minmax(0,1fr)_auto] lg:grid-cols-[0.38fr_0.62fr] lg:grid-rows-1">
                 <div
                   className={`order-1 relative overflow-hidden border-b border-[#decfbf] bg-gradient-to-br ${activeProject.gradient} lg:order-2 lg:border-b-0 lg:border-l`}
                 >
@@ -520,6 +520,14 @@ export default function DeviceShowcase() {
 
                 <div className="order-3 border-t border-[#decfbf] bg-white/96 px-3 py-1.5 lg:hidden">
                   <div className="overflow-hidden pb-0.5">
+                    <motion.div
+                      className="mb-1 flex items-center justify-center gap-1 text-[0.58rem] font-medium tracking-[0.08em] text-zinc-600/80 uppercase"
+                      animate={{ opacity: [0.5, 0.9, 0.5] }}
+                      transition={{ duration: 2.1, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <span>Scroll for next project</span>
+                      <ChevronDown className="h-3 w-3" />
+                    </motion.div>
                     <motion.div
                       key={activeProject.slug}
                       initial={{ x: 14, opacity: 0.86 }}
