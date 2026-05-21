@@ -1,0 +1,22 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Jiti Ltd Open Graph image">
+  <defs>
+    <linearGradient id="bg" x1="40" y1="20" x2="1160" y2="610" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0EA5E9" stop-opacity="0.92" />
+      <stop offset="0.55" stop-color="#F59E0B" stop-opacity="0.84" />
+      <stop offset="1" stop-color="#111827" stop-opacity="1" />
+    </linearGradient>
+    <linearGradient id="card" x1="120" y1="180" x2="1030" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white" stop-opacity="0.26" />
+      <stop offset="1" stop-color="white" stop-opacity="0.1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#08090A" />
+  <circle cx="1034" cy="44" r="282" fill="#22D3EE" fill-opacity="0.24" />
+  <circle cx="123" cy="14" r="216" fill="#F59E0B" fill-opacity="0.2" />
+  <rect x="70" y="90" width="1060" height="450" rx="44" fill="url(#card)" stroke="rgba(255,255,255,0.2)" />
+  <rect x="86" y="104" width="1028" height="422" rx="36" fill="url(#bg)" fill-opacity="0.25" />
+  <text x="132" y="250" fill="#F3F4F6" font-size="40" font-family="Arial, sans-serif" letter-spacing="6">JITI LTD</text>
+  <text x="132" y="348" fill="#FFFFFF" font-size="74" font-family="Arial, sans-serif" font-weight="700">Product Design + Software Studio</text>
+  <text x="132" y="412" fill="#E5E7EB" font-size="34" font-family="Arial, sans-serif">Web, apps, marketplaces, e-commerce, automation, branding</text>
+  <text x="132" y="476" fill="#FDE68A" font-size="28" font-family="Arial, sans-serif">hello@jiti.ltd</text>
+</svg>

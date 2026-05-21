@@ -1,0 +1,574 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
+import { projects } from "@/data/siteData";
+
+function ProjectIcon({ project, className = "" }) {
+  const hasImage = Boolean(project.logo?.src);
+
+  if (hasImage) {
+    return (
+      <div
+        className={`mb-4 flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-zinc-900/8 bg-white/88 p-1.5 shadow-sm ${className}`}
+      >
+        {/* TODO: Replace logo.src with final brand assets in /public when available. */}
+        <Image
+          src={project.logo.src}
+          alt={project.logo.alt || `${project.name} logo`}
+          width={40}
+          height={40}
+          className="h-full w-full object-contain"
+        />
+      </div>
+    );
+  }
+
+  return <div className={`mb-4 h-12 w-12 rounded-2xl ${project.accent} ${className}`} />;
+}
+
+function ProgressRail({ activeIndex, onSelect }) {
+  return (
+    <div className="absolute -left-11 top-1/2 z-20 hidden h-[64vh] -translate-y-1/2 lg:flex">
+      <div className="flex h-full flex-col gap-2 rounded-full border border-[#d6cab8] bg-white/78 p-1.5 shadow-sm backdrop-blur-sm">
+        {projects.map((project, index) => (
+          <button
+            key={`${project.slug}-progress`}
+            type="button"
+            onClick={() => onSelect(index)}
+            className="group relative flex-1 rounded-full border border-zinc-900/8 p-[2px]"
+            aria-label={`Jump to ${project.name}`}
+            aria-pressed={index === activeIndex}
+          >
+            <span
+              className={`block h-full w-full rounded-full transition ${
+                index === activeIndex ? "opacity-100" : "opacity-35 group-hover:opacity-65"
+              }`}
+              style={{ backgroundColor: project.accentColor || "#18181b" }}
+            />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GuidesPoster({ project, compact = false }) {
+  const imageSrc =
+    project.showcase?.desktopImage ||
+    project.showcase?.mobileImage ||
+    "/logos/guides-store-preview-3.webp";
+
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-2xl border border-[#dcc886] bg-[#f8e374]">
+      {/* TODO: Swap this with a final high-resolution Guides showcase screenshot when available. */}
+      <Image
+        src={imageSrc}
+        alt={`${project.name} translated-in-language screenshot`}
+        fill
+        sizes={compact ? "90vw" : "(min-width: 1024px) 44vw, 90vw"}
+        className={`object-contain ${compact ? "p-1.5" : "p-3"}`}
+      />
+    </div>
+  );
+}
+
+function GuidesDesktopPanels({ project }) {
+  return (
+    <div className="mt-5 grid h-[calc(100%-2.5rem)] min-h-0 grid-cols-[1.14fr_0.86fr] gap-4">
+      <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-4 rounded-[1.3rem] border border-[#e6d8b5] bg-[#fffaf0] p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <ProjectIcon project={project} className="mb-0 h-11 w-11 rounded-xl p-1" />
+            <div>
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.15em] text-[#6f5c2e]">
+                Guides platform
+              </p>
+              <h3 className="mt-1 text-[2.1rem] leading-[1.02] font-bold text-zinc-900">
+                {project.laptopTitle}
+              </h3>
+            </div>
+          </div>
+          <span className="rounded-full border border-[#dcc886] bg-white px-3 py-1 text-xs font-semibold text-[#5f4f20]">
+            Web + iOS + Android
+          </span>
+        </div>
+
+        <div className="min-h-0 overflow-hidden">
+          <GuidesPoster project={project} />
+        </div>
+      </div>
+
+      <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] rounded-[1.3rem] border border-[#eadfbe] bg-white/78 p-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-700/70">
+          Mobile rollout
+        </p>
+
+        <div className="mt-3 grid min-h-0 grid-rows-[auto_auto_minmax(0,1fr)_auto] gap-2 overflow-hidden">
+          <div className="grid grid-cols-1 gap-2">
+            <a
+              href={project.showcase?.appStoreUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-between gap-2 rounded-xl border border-zinc-900/8 bg-white/88 px-3 py-2 transition hover:bg-white"
+              aria-label="Open Guides on Apple App Store"
+            >
+              {/* TODO: Replace app store assets if updated by Guides branding team. */}
+              <Image
+                src={project.showcase?.appStoreBadge || "/logos/guides-app-store.svg"}
+                alt="Download on the App Store"
+                width={108}
+                height={32}
+                className="h-auto w-[6.75rem]"
+              />
+              <span className="text-xs font-semibold text-zinc-700">iOS</span>
+            </a>
+            <a
+              href={project.showcase?.googlePlayUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-between gap-2 rounded-xl border border-zinc-900/8 bg-white/88 px-3 py-2 transition hover:bg-white"
+              aria-label="Open Guides on Google Play"
+            >
+              <Image
+                src={project.showcase?.googlePlayBadge || "/logos/guides-google-play.svg"}
+                alt="Get it on Google Play"
+                width={108}
+                height={32}
+                className="h-auto w-[6.75rem]"
+              />
+              <span className="text-xs font-semibold text-zinc-700">Android</span>
+            </a>
+          </div>
+
+          <a
+            href={project.showcase?.websiteUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#d9c580] bg-[#fff6da] px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-zinc-800 transition hover:bg-[#fff1c2]"
+          >
+            View guides.app
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
+
+          <div className="min-h-0 overflow-y-auto pr-1">
+            <div className="grid gap-2">
+              {project.showcase?.features?.map((feature) => (
+                <div
+                  key={`guides-feature-${feature}`}
+                  className="rounded-xl border border-[#ead9ae] bg-[#fff8e6] px-3 py-2 text-sm font-medium text-zinc-800"
+                >
+                  {feature}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-zinc-900/8 bg-white/88 px-3 py-2">
+            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-zinc-700">
+              A Jiti platform
+            </p>
+            <p className="mt-1 text-sm text-zinc-700">
+              Experience design, platform engineering, and mobile delivery in one product.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DefaultDesktopPanels({ project }) {
+  return (
+    <div className="mt-5 grid h-[calc(100%-2.5rem)] grid-cols-[1.14fr_0.86fr] gap-4">
+      <div className="rounded-[1.3rem] bg-white/78 p-5">
+        <ProjectIcon project={project} />
+        <h3 className="max-w-xl text-4xl font-bold text-zinc-900">{project.laptopTitle}</h3>
+        <div className="mt-5 space-y-3">
+          {/* TODO: Replace this desktop panel with a real project screenshot. */}
+          <div className="h-16 rounded-2xl bg-white/82" />
+          <div className="grid grid-cols-3 gap-3">
+            <div className="h-12 rounded-xl bg-white/66" />
+            <div className="h-12 rounded-xl bg-white/56" />
+            <div className="h-12 rounded-xl bg-white/66" />
+          </div>
+          <div className="h-24 rounded-2xl bg-black/10" />
+        </div>
+      </div>
+
+      <div className="rounded-[1.3rem] bg-white/68 p-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-700/70">
+          Supporting panel
+        </p>
+        <div className="mt-3 space-y-3">
+          <div className="h-20 rounded-2xl bg-white/72" />
+          <div className="h-10 rounded-xl bg-white/62" />
+          <div className="h-10 rounded-xl bg-white/58" />
+          <div className="h-20 rounded-2xl bg-black/12" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GuidesMobilePhone({ project }) {
+  return (
+    <div className="mx-auto w-[min(100%,15rem)] min-w-0 rounded-[2.2rem] border-[8px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)]">
+      <div className="rounded-[1.7rem] bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152] p-3">
+        <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
+
+        <div className="mt-3 h-[17.8rem] overflow-hidden rounded-2xl border border-[#ddca89] bg-[#f8e374] p-1.5">
+          <GuidesPoster project={project} compact />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DefaultMobilePhone({ project }) {
+  return (
+    <div className="mx-auto w-[min(100%,15rem)] min-w-0 rounded-[2.2rem] border-[8px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)]">
+      <div className={`rounded-[1.7rem] bg-gradient-to-br p-4 ${project.gradient}`}>
+        <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
+        <p className="mt-4 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-zinc-800/72">
+          Mobile preview
+        </p>
+        <p className="mt-1 text-2xl font-bold text-zinc-900">{project.phoneTitle}</p>
+
+        {/* TODO: Replace this mobile panel with a real project screenshot. */}
+        <div className="mt-5 space-y-3">
+          <div className="h-12 rounded-xl bg-white/68" />
+          <div className="h-8 rounded-xl bg-white/56" />
+          <div className="h-8 rounded-xl bg-white/50" />
+          <div className="h-8 rounded-xl bg-white/45" />
+        </div>
+        <p className="mt-4 flex items-center text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-zinc-800/72">
+          Open project
+          <ArrowUpRight className="ml-1 h-3 w-3" />
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default function DeviceShowcase() {
+  const stepRefs = useRef([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const steps = stepRefs.current.filter(Boolean);
+    if (!steps.length) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+        if (!visibleEntries.length) {
+          return;
+        }
+
+        let nearest = visibleEntries[0];
+        let nearestDistance = Number.POSITIVE_INFINITY;
+
+        visibleEntries.forEach((entry) => {
+          const { top, height } = entry.boundingClientRect;
+          const distanceFromCenter = Math.abs(top + height / 2 - window.innerHeight / 2);
+
+          if (distanceFromCenter < nearestDistance) {
+            nearest = entry;
+            nearestDistance = distanceFromCenter;
+          }
+        });
+
+        const nextIndex = Number(nearest.target.getAttribute("data-step-index"));
+        if (!Number.isNaN(nextIndex)) {
+          setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-35% 0px -35% 0px",
+        threshold: [0.1, 0.5, 0.9],
+      },
+    );
+
+    steps.forEach((step) => observer.observe(step));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const activeProject = projects[activeIndex];
+  const isGuidesActive = activeProject.slug === "guides-app";
+  const mobileWheelProjects = projects.map((_, offset) => {
+    const wheelIndex = (activeIndex + offset) % projects.length;
+    return {
+      ...projects[wheelIndex],
+      wheelOffset: offset,
+      index: wheelIndex,
+    };
+  });
+
+  const jumpToProject = (index) => {
+    const target = stepRefs.current[index];
+    if (!target) {
+      return;
+    }
+
+    setActiveIndex(index);
+    const viewportOffset = window.innerHeight * 0.24;
+    const top = target.getBoundingClientRect().top + window.scrollY - viewportOffset;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  };
+
+  return (
+    <section id="work" className="px-2 pb-12 pt-6 sm:px-4 sm:pt-8 lg:px-8">
+      <div className="mx-auto mb-3 max-w-5xl px-2 md:hidden">
+        <p className="inline-flex rounded-full border border-zinc-900/12 bg-white/85 px-3 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-zinc-700 shadow-sm">
+          Selected Work
+        </p>
+        <h2 className="mt-3 text-2xl leading-tight font-bold text-zinc-950">
+          Scroll to preview each project
+        </h2>
+      </div>
+
+      <div className="mx-auto mb-4 hidden max-w-5xl px-2 md:block md:px-4">
+        <p className="inline-flex rounded-full border border-zinc-900/12 bg-white/85 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-700 shadow-sm">
+          Selected Work
+        </p>
+        <h2 className="mt-4 text-4xl font-bold text-zinc-950 sm:text-5xl lg:text-6xl">
+          Browse each product clearly,
+          <br />
+          with brand-led context.
+        </h2>
+      </div>
+
+      <div className="relative">
+        <div className="sticky top-0 h-[100dvh]">
+          <div className="relative mx-auto h-full max-w-[1600px] px-2 pb-2 pt-2 sm:px-4 sm:pt-3 lg:px-8 lg:pt-4">
+            <ProgressRail activeIndex={activeIndex} onSelect={jumpToProject} />
+
+            <div className="h-full overflow-hidden rounded-[2rem] border border-[#d9cdbf] bg-[#fffaf3] shadow-[0_22px_70px_rgba(87,60,18,0.15)] sm:rounded-[2.5rem]">
+              <div className="grid h-full grid-rows-[47svh_minmax(0,1fr)_auto] lg:grid-cols-[0.38fr_0.62fr] lg:grid-rows-1">
+                <div
+                  className={`order-1 relative overflow-hidden border-b border-[#decfbf] bg-gradient-to-br ${activeProject.gradient} lg:order-2 lg:border-b-0 lg:border-l`}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeProject.slug}
+                      className="h-full w-full"
+                      initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
+                      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
+                      transition={{ duration: 0.42, ease: "easeInOut" }}
+                    >
+                      <div className="relative h-full p-3 sm:p-5 lg:p-7">
+                        <div className="absolute inset-0 bg-white/10" />
+
+                        <div className="relative hidden h-full rounded-[1.6rem] border border-white/50 bg-white/74 p-5 shadow-sm lg:block">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="h-3 w-3 rounded-full bg-rose-400" />
+                              <span className="h-3 w-3 rounded-full bg-amber-300" />
+                              <span className="h-3 w-3 rounded-full bg-emerald-400" />
+                            </div>
+                            <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-zinc-700">
+                              {activeProject.category}
+                            </span>
+                          </div>
+
+                          {isGuidesActive ? (
+                            <GuidesDesktopPanels project={activeProject} />
+                          ) : (
+                            <DefaultDesktopPanels project={activeProject} />
+                          )}
+                        </div>
+
+                        <div className="relative flex h-full w-full min-w-0 items-center justify-center overflow-x-hidden px-2 lg:hidden">
+                          {isGuidesActive ? (
+                            <GuidesMobilePhone project={activeProject} />
+                          ) : (
+                            <DefaultMobilePhone project={activeProject} />
+                          )}
+                        </div>
+
+                        <div className="absolute bottom-6 right-6 hidden w-48 rounded-[2rem] border-[9px] border-[#111216] bg-[#111216] shadow-[0_18px_50px_rgba(0,0,0,0.36)] lg:block">
+                          <div className={`rounded-[1.5rem] bg-gradient-to-br p-4 ${activeProject.gradient}`}>
+                            <div className="mx-auto h-1 w-10 rounded-full bg-black/28" />
+                            <p className="mt-4 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-zinc-800/75">
+                              Mobile view
+                            </p>
+                            <p className="mt-1 text-lg font-bold text-zinc-900">{activeProject.phoneTitle}</p>
+
+                            {/* TODO: Replace this mobile inset panel with a real project screenshot. */}
+                            <div className="mt-4 space-y-2">
+                              <div className="h-10 rounded-xl bg-white/68" />
+                              <div className="h-6 rounded-xl bg-white/56" />
+                              <div className="h-6 rounded-xl bg-white/48" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                <aside className="order-2 flex min-w-0 flex-col overflow-hidden bg-white/92 px-4 pb-3 pt-4 lg:order-1 lg:px-7 lg:py-8">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-zinc-600">
+                    Now showing
+                  </p>
+
+                  <div className="mt-2 flex items-start justify-between gap-3">
+                    <h3 className="break-words text-[2.05rem] leading-[1.03] font-bold text-zinc-950 sm:text-4xl">
+                      {activeProject.name}
+                    </h3>
+                    {activeProject.logo?.src ? (
+                      <div className="mt-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-zinc-900/10 bg-white/88 p-1.5 shadow-sm">
+                        <Image
+                          src={activeProject.logo.src}
+                          alt={activeProject.logo.alt || `${activeProject.name} logo`}
+                          width={38}
+                          height={38}
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="mt-2">
+                    <span className="inline-flex rounded-full border border-zinc-900/16 px-2.5 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-zinc-700 sm:text-[0.72rem]">
+                      {activeProject.category}
+                    </span>
+                  </div>
+
+                  <p className="mt-3 text-sm leading-6 text-zinc-700 sm:text-base sm:leading-7">
+                    {activeProject.summary}
+                  </p>
+
+                  <ul className="mt-4 grid gap-2 text-sm text-zinc-700 sm:grid-cols-2">
+                    {activeProject.highlights.map((highlight, index) => (
+                      <li
+                        key={highlight}
+                        className={`items-start gap-2 ${index > 1 ? "hidden sm:flex" : "flex"}`}
+                      >
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-amber-400" />
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {activeProject.showcase?.appStoreBadge &&
+                  activeProject.showcase?.googlePlayBadge ? (
+                    <div className="mt-4 grid grid-cols-2 gap-2 lg:hidden">
+                      <a
+                        href={activeProject.showcase.appStoreUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex min-w-0 items-center justify-center overflow-hidden rounded-xl border border-zinc-900/10 bg-white/86 px-2 py-2"
+                        aria-label={`Open ${activeProject.name} on Apple App Store`}
+                      >
+                        <Image
+                          src={activeProject.showcase.appStoreBadge}
+                          alt="Download on the App Store"
+                          width={108}
+                          height={32}
+                          className="h-8 w-full max-w-[7.2rem] object-contain"
+                        />
+                      </a>
+                      <a
+                        href={activeProject.showcase.googlePlayUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex min-w-0 items-center justify-center overflow-hidden rounded-xl border border-zinc-900/10 bg-white/86 px-2 py-2"
+                        aria-label={`Open ${activeProject.name} on Google Play`}
+                      >
+                        <Image
+                          src={activeProject.showcase.googlePlayBadge}
+                          alt="Get it on Google Play"
+                          width={108}
+                          height={32}
+                          className="h-8 w-full max-w-[7.2rem] object-contain"
+                        />
+                      </a>
+                    </div>
+                  ) : null}
+
+                  <div className="mt-4 hidden lg:flex lg:flex-wrap lg:gap-2">
+                    {projects.map((project, index) => (
+                      <button
+                        key={project.slug}
+                        type="button"
+                        onClick={() => jumpToProject(index)}
+                        className={`shrink-0 rounded-full px-4 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] transition ${
+                          index === activeIndex
+                            ? "bg-zinc-900 text-white"
+                            : "border border-zinc-900/14 bg-white text-zinc-700 hover:bg-zinc-100"
+                        }`}
+                        aria-label={`Jump to ${project.name}`}
+                        aria-pressed={index === activeIndex}
+                      >
+                        {project.name}
+                      </button>
+                    ))}
+                  </div>
+                </aside>
+
+                <div className="order-3 border-t border-[#decfbf] bg-white/96 px-3 py-1.5 lg:hidden">
+                  <div className="-mx-1 overflow-x-auto px-1 pb-0.5 pr-[5.8rem] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    <motion.div
+                      key={activeProject.slug}
+                      initial={{ x: 14, opacity: 0.86 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ duration: 0.28, ease: "easeOut" }}
+                      className="flex min-w-max items-center gap-1.5"
+                    >
+                      {mobileWheelProjects.map((project, wheelOrder) => {
+                        const isActiveWheelItem = wheelOrder === 0;
+
+                        return (
+                          <button
+                            key={`${project.slug}-mobile-pill-${wheelOrder}`}
+                            type="button"
+                            onClick={() => jumpToProject(project.index)}
+                            className={`inline-flex items-center justify-center rounded-full text-[0.62rem] font-semibold uppercase tracking-[0.14em] transition ${
+                              isActiveWheelItem
+                                ? "min-w-[8.1rem] bg-zinc-900 px-3.5 py-1.5 text-white"
+                                : "min-w-[4.35rem] border border-zinc-900/14 bg-white px-2.5 py-1.5 text-zinc-700 hover:bg-zinc-100"
+                            }`}
+                            aria-label={`Jump to ${project.name}`}
+                            aria-pressed={project.index === activeIndex}
+                          >
+                            {isActiveWheelItem
+                              ? project.name
+                              : (project.shortName || project.name)}
+                          </button>
+                        );
+                      })}
+                    </motion.div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="pointer-events-none" aria-hidden="true">
+          {projects.map((project, index) => (
+            <div
+              key={project.slug}
+              ref={(node) => {
+                stepRefs.current[index] = node;
+              }}
+              data-step-index={index}
+              className="h-[96svh] md:h-[92svh]"
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

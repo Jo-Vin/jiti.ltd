@@ -1,0 +1,65 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Mail, MessageCircle } from "lucide-react";
+import Image from "next/image";
+import { contact, navLinks } from "@/data/siteData";
+
+export default function Navbar() {
+  return (
+    <motion.header
+      className="relative z-40 mx-auto mt-3 w-[calc(100%-1rem)] max-w-6xl"
+      initial={{ y: -24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut", delay: 1.9 }}
+    >
+      <nav
+        className="flex items-center justify-between rounded-full border border-[#dacdbd] bg-white/80 px-3 py-2 text-sm shadow-[0_14px_40px_rgba(84,58,20,0.12)] backdrop-blur-xl sm:px-5"
+        aria-label="Primary"
+      >
+        <a href="#main-content" className="flex items-center text-zinc-950">
+          <Image
+            src="/logos/Jiti_Logo_Black.png"
+            alt="Jiti Ltd"
+            width={155}
+            height={52}
+            className="h-8 w-auto sm:h-9"
+            priority
+          />
+        </a>
+
+        <ul className="hidden items-center gap-6 text-[0.82rem] text-zinc-700 md:flex">
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <a
+                href={link.href}
+                className="transition hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden items-center gap-2 md:flex">
+          <a
+            href="#contact"
+            className="inline-flex items-center rounded-full bg-zinc-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
+            aria-label="Open contact section"
+          >
+            <MessageCircle className="mr-1.5 h-3.5 w-3.5" />
+            Contact
+          </a>
+          <a
+            href={contact.emailLink}
+            className="hidden items-center rounded-full border border-zinc-900/15 bg-white/60 px-3 py-2 text-xs font-semibold text-zinc-800 transition hover:bg-white sm:inline-flex"
+            aria-label="Email Jiti Ltd"
+          >
+            <Mail className="mr-1.5 h-3.5 w-3.5" />
+            Email
+          </a>
+        </div>
+      </nav>
+    </motion.header>
+  );
+}
