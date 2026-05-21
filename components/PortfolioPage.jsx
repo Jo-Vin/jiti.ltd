@@ -44,7 +44,7 @@ export default function PortfolioPage() {
         const top = target.getBoundingClientRect().top + window.scrollY - 8;
         window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
       }
-    }, 430);
+    }, 540);
   };
 
   return (

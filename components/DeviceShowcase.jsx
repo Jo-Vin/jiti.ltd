@@ -165,7 +165,7 @@ function GuidesDesktopPanels({ project }) {
           Mobile rollout
         </p>
 
-        <div className="mt-3 grid min-h-0 grid-rows-[auto_auto_minmax(0,1fr)_auto_auto] gap-2 overflow-hidden">
+        <div className="mt-3 grid gap-2">
           <div className="grid grid-cols-1 gap-2">
             <a
               href={project.showcase?.appStoreUrl}
@@ -212,17 +212,15 @@ function GuidesDesktopPanels({ project }) {
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
 
-          <div className="min-h-0 overflow-y-auto pr-1">
-            <div className="grid gap-2">
-              {project.showcase?.features?.map((feature) => (
-                <div
-                  key={`guides-feature-${feature}`}
-                  className="rounded-xl border border-[#ead9ae] bg-[#fff8e6] px-3 py-2 text-sm font-medium text-zinc-800"
-                >
-                  {feature}
-                </div>
-              ))}
-            </div>
+          <div className="grid gap-2">
+            {project.showcase?.features?.map((feature) => (
+              <div
+                key={`guides-feature-${feature}`}
+                className="rounded-xl border border-[#ead9ae] bg-[#fff8e6] px-3 py-2 text-sm font-medium text-zinc-800"
+              >
+                {feature}
+              </div>
+            ))}
           </div>
 
           <TechStackSection
@@ -512,22 +510,6 @@ export default function DeviceShowcase() {
                           )}
                         </div>
 
-                        <div className="absolute bottom-6 right-6 hidden w-48 rounded-[2rem] border-[9px] border-[#111216] bg-[#111216] shadow-[0_18px_50px_rgba(0,0,0,0.36)] lg:block">
-                          <div className={`rounded-[1.5rem] bg-gradient-to-br p-4 ${activeProject.gradient}`}>
-                            <div className="mx-auto h-1 w-10 rounded-full bg-black/28" />
-                            <p className="mt-4 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-zinc-800/75">
-                              Mobile view
-                            </p>
-                            <p className="mt-1 text-lg font-bold text-zinc-900">{activeProject.phoneTitle}</p>
-
-                            {/* TODO: Replace this mobile inset panel with a real project screenshot. */}
-                            <div className="mt-4 space-y-2">
-                              <div className="h-10 rounded-xl bg-white/68" />
-                              <div className="h-6 rounded-xl bg-white/56" />
-                              <div className="h-6 rounded-xl bg-white/48" />
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     </motion.div>
                   </AnimatePresence>
@@ -710,7 +692,7 @@ export default function DeviceShowcase() {
                 stepRefs.current[index] = node;
               }}
               data-step-index={index}
-              className="h-[96svh] md:h-[92svh]"
+              className="h-[76svh] md:h-[78svh]"
             />
           ))}
         </div>

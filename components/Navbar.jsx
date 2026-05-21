@@ -17,7 +17,6 @@ import { contact, navLinks } from "@/data/siteData";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -46,34 +45,24 @@ export default function Navbar() {
     };
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setHasScrolled(window.scrollY > 12);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     <motion.header
       className="relative z-40 mx-auto mt-3 w-[calc(100%-1rem)] max-w-6xl"
-      initial={{ y: -24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut", delay: 1.9 }}
     >
       <nav
-        className="flex items-center justify-between rounded-full border border-[#dacdbd] bg-white/80 pl-4 pr-3 py-2 text-sm shadow-[0_14px_40px_rgba(84,58,20,0.12)] backdrop-blur-xl sm:px-5"
+        className="relative flex items-center justify-between rounded-full border border-[#dacdbd] bg-white/80 pl-6 pr-3 py-2 text-sm shadow-[0_14px_40px_rgba(84,58,20,0.12)] backdrop-blur-xl sm:px-5"
         aria-label="Primary"
       >
-        <a href="#main-content" className="group flex items-center pl-1 text-zinc-950 sm:pl-0">
+        <a href="#main-content" className="group flex items-center text-zinc-950">
           <Image
             src="/logos/Jiti_Logo_Black.png"
             alt="Jiti Ltd"
             width={148}
             height={49}
-            className="h-8 w-auto transition group-hover:opacity-90 sm:h-9"
+            className="h-[1.65rem] w-auto transition group-hover:opacity-90 sm:h-7"
             priority
           />
         </a>
@@ -112,11 +101,7 @@ export default function Navbar() {
 
         <div
           ref={menuRef}
-          className={`fixed right-[calc(0.7rem+env(safe-area-inset-right))] z-[78] transition-[top] duration-300 md:hidden ${
-            hasScrolled
-              ? "top-[calc(0.85rem+env(safe-area-inset-top))]"
-              : "top-[calc(0.6rem+env(safe-area-inset-top))]"
-          }`}
+          className="fixed right-[calc(0.75rem+env(safe-area-inset-right))] top-[calc(0.88rem+env(safe-area-inset-top))] z-[78] md:hidden"
         >
           <button
             type="button"

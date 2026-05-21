@@ -44,7 +44,7 @@ export default function SplashScreen({ visible }) {
           />
 
           <motion.div
-            className="relative rounded-[2rem] border border-[#dbcdbd] bg-white/66 px-8 py-7 text-center shadow-[0_24px_70px_rgba(42,31,11,0.16)] backdrop-blur-xl sm:rounded-[2.4rem] sm:px-12 sm:py-9"
+            className="relative rounded-[2rem] border border-[#dbcdbd] bg-white/66 px-8 py-9 text-center shadow-[0_24px_70px_rgba(42,31,11,0.16)] backdrop-blur-xl sm:rounded-[2.4rem] sm:px-12 sm:py-11"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.75, ease: "easeOut" }}
@@ -57,11 +57,11 @@ export default function SplashScreen({ visible }) {
               className="mx-auto h-9 w-auto sm:h-11"
               priority
             />
-            <p className="mt-2 text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-zinc-700/75 sm:text-xs sm:tracking-[0.34em]">
+            <p className="mt-4 text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-zinc-700/75 sm:mt-5 sm:text-xs sm:tracking-[0.34em]">
               Design + software studio
             </p>
 
-            <div className="mt-3 flex items-center justify-center gap-0.5 text-amber-500">
+            <div className="mt-4 flex items-center justify-center gap-0.5 text-amber-500">
               {stars.map((_, index) => (
                 <Star key={`splash-star-${index}`} className="h-4 w-4 fill-current" />
               ))}

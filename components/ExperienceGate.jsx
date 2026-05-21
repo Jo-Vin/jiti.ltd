@@ -19,7 +19,7 @@ export default function ExperienceGate({ visible, onSelect, onSkip }) {
         const next = Math.max(current - 1, 0);
         if (next === 0) {
           window.clearInterval(timer);
-          window.setTimeout(() => onSelect("work"), 80);
+          window.setTimeout(() => onSelect("work"), 240);
         }
         return next;
       });
