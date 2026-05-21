@@ -445,7 +445,29 @@ export default function DeviceShowcase() {
           <div className="relative mx-auto h-full max-w-[1600px] px-0 pb-0 pt-0 sm:px-4 sm:pt-3 lg:px-8 lg:pt-4">
             <ProgressRail activeIndex={activeIndex} onSelect={jumpToProject} />
 
-            <div className="h-full max-w-full overflow-hidden rounded-none border border-[#d9cdbf] bg-[#fffaf3] shadow-[0_22px_70px_rgba(87,60,18,0.15)] sm:rounded-[2.5rem]">
+            <div className="relative h-full max-w-full overflow-hidden rounded-none border border-[#d9cdbf] bg-[#fffaf3] shadow-[0_22px_70px_rgba(87,60,18,0.15)] sm:rounded-[2.5rem]">
+              {!isFinalProject ? (
+                <button
+                  type="button"
+                  onClick={jumpToNextProject}
+                  className="absolute right-0 top-1/2 z-30 -translate-y-1/2 rounded-l-xl border border-r-0 border-zinc-900/12 bg-white/90 py-2 pl-2 pr-1 shadow-sm backdrop-blur lg:hidden"
+                  aria-label="Scroll to next project"
+                >
+                  <div className="flex h-28 flex-col items-center justify-between">
+                    <motion.span
+                      className="inline-flex text-zinc-700"
+                      animate={{ y: [0, 3.5, 0], opacity: [0.45, 1, 0.45] }}
+                      transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    </motion.span>
+                    <span className="[writing-mode:vertical-rl] text-[0.54rem] font-semibold uppercase tracking-[0.08em] text-zinc-600">
+                      Scroll for next project
+                    </span>
+                  </div>
+                </button>
+              ) : null}
+
               <div className="grid h-full grid-rows-[46svh_minmax(0,1fr)_auto] sm:grid-rows-[47svh_minmax(0,1fr)_auto] lg:grid-cols-[0.38fr_0.62fr] lg:grid-rows-1">
                 <div
                   className={`order-1 relative overflow-hidden border-b border-[#decfbf] bg-gradient-to-br ${activeProject.gradient} lg:order-2 lg:border-b-0 lg:border-l`}
@@ -636,27 +658,6 @@ export default function DeviceShowcase() {
 
                 <div className="order-3 border-t border-[#decfbf] bg-white/96 px-3 py-1.5 lg:hidden">
                   <div className="overflow-hidden pb-0.5">
-                    {!isFinalProject ? (
-                      <button
-                        type="button"
-                        onClick={jumpToNextProject}
-                        className="mb-2.5 flex w-full items-center justify-center gap-1 pr-[6.4rem] text-[0.58rem] font-medium tracking-[0.08em] text-zinc-600/85 uppercase"
-                        aria-label="Scroll to next project"
-                      >
-                        <span>Scroll for next project</span>
-                        <motion.span
-                          className="inline-flex"
-                          animate={{ y: [0, 3.5, 0], opacity: [0.45, 1, 0.45] }}
-                          transition={{ duration: 1.25, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                          <ChevronDown className="h-3.5 w-3.5" />
-                        </motion.span>
-                      </button>
-                    ) : (
-                      <div className="mb-2.5 flex items-center justify-center pr-[6.4rem] text-[0.58rem] font-medium tracking-[0.08em] text-zinc-600/75 uppercase">
-                        You reached the last project
-                      </div>
-                    )}
                     <motion.div
                       key={activeProject.slug}
                       initial={{ x: 14, opacity: 0.86 }}
