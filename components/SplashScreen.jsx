@@ -24,30 +24,20 @@ export default function SplashScreen({ visible }) {
           />
 
           <motion.div
-            className="relative rounded-[2rem] border border-[#dbcdbd] bg-white/66 px-7 py-7 text-center shadow-[0_24px_70px_rgba(42,31,11,0.16)] backdrop-blur-xl sm:rounded-[2.4rem] sm:px-9 sm:py-9"
+            className="relative rounded-[2rem] border border-[#dbcdbd] bg-white/66 px-8 py-7 text-center shadow-[0_24px_70px_rgba(42,31,11,0.16)] backdrop-blur-xl sm:rounded-[2.4rem] sm:px-12 sm:py-9"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.75, ease: "easeOut" }}
           >
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-[1.3rem] border border-black/10 bg-white/92 p-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.14)] sm:mb-5 sm:h-20 sm:w-20 sm:rounded-[1.6rem] sm:p-3">
-              <Image
-                src="/logos/Jiti_Square_Black.png"
-                alt="Jiti Ltd"
-                width={88}
-                height={88}
-                className="h-full w-full object-contain"
-                priority
-              />
-            </div>
             <Image
               src="/logos/Jiti_Logo_Black.png"
               alt="Jiti Ltd wordmark"
               width={172}
               height={58}
-              className="mx-auto h-8 w-auto sm:h-10"
+              className="mx-auto h-9 w-auto sm:h-11"
               priority
             />
-            <p className="text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-zinc-700/75 sm:text-xs sm:tracking-[0.34em]">
+            <p className="mt-2 text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-zinc-700/75 sm:text-xs sm:tracking-[0.34em]">
               Design + software studio
             </p>
           </motion.div>

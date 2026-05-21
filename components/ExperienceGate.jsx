@@ -1,9 +1,36 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Code2, Sparkles } from "lucide-react";
 
+const AUTO_START_SECONDS = 8;
+
 export default function ExperienceGate({ visible, onSelect, onSkip }) {
+  const [countdown, setCountdown] = useState(AUTO_START_SECONDS);
+
+  useEffect(() => {
+    if (!visible) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setCountdown((current) => {
+        const next = Math.max(current - 1, 0);
+        if (next === 0) {
+          window.clearInterval(timer);
+          window.setTimeout(() => onSelect("work"), 80);
+        }
+        return next;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [visible, onSelect]);
+
+  const progressPercent =
+    ((AUTO_START_SECONDS - countdown) / AUTO_START_SECONDS) * 100;
+
   return (
     <AnimatePresence>
       {visible ? (
@@ -47,8 +74,15 @@ export default function ExperienceGate({ visible, onSelect, onSkip }) {
                   Scroll through all five projects. At the finish line, jump to what
                   we can do next.
                 </p>
+                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-900/10">
+                  <motion.div
+                    className="h-full rounded-full bg-zinc-900"
+                    animate={{ width: `${progressPercent}%` }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                  />
+                </div>
                 <p className="mt-3 inline-flex items-center text-sm font-semibold text-zinc-900 sm:mt-4">
-                  Go to portfolio
+                  Go to portfolio ({countdown})
                   <ArrowUpRight className="ml-1.5 h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </p>
               </button>

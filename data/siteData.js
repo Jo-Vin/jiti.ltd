@@ -1,6 +1,7 @@
 export const navLinks = [
   { href: "#work", label: "Work" },
   { href: "#services", label: "Services" },
+  { href: "#proof", label: "Proof" },
   { href: "#why-jiti", label: "Why Jiti" },
   { href: "#contact", label: "Contact" },
 ];
@@ -48,8 +49,9 @@ export const projects = [
     services: ["Product design", "Platform engineering", "Mobile app delivery"],
     showcase: {
       desktopImage: "/Guides.app_Showcase.webp",
-      mobileImage: "/Guides.app_Showcase.png",
-      imageFit: "cover",
+      mobileImage: "/Guides.app_Showcase.webp",
+      desktopImageFit: "contain",
+      mobileImageFit: "cover",
       appStoreBadge: "/logos/guides-app-store.svg",
       googlePlayBadge: "/logos/guides-google-play.svg",
       appStoreUrl:
@@ -227,5 +229,67 @@ export const whyJiti = [
     title: "Built for Real-World Constraints",
     description:
       "We design for uncertain connectivity, legacy tools, and delivery pace so the final product performs in real usage.",
+  },
+];
+
+export const socialProof = {
+  legacyBrand: "Vouker",
+  sourceLabel: "vouker.com",
+  sourceUrl: "https://vouker.com/",
+  totalReviews: 9,
+  rating: 5,
+  headline:
+    "Client results from our former brand, now carried into Jiti Ltd.",
+};
+
+export const testimonials = [
+  {
+    quote:
+      "Great designer who matched my expectations, very efficient and professional.",
+    author: "Leon",
+    company: "Legacy 1 Fitness",
+  },
+  {
+    quote:
+      "Surpassed my expectations with attention to detail and produced a fantastic logo.",
+    author: "Dee Banks",
+    company: "China Unboxed",
+  },
+  {
+    quote:
+      "The service we received went above and beyond website development.",
+    author: "Alexandra Hyde",
+    company: "Shrink my House",
+  },
+  {
+    quote:
+      "Created a user-friendly website that met the design intent and more.",
+    author: "Lewis Tompson",
+    company: "Asyleam",
+  },
+  {
+    quote: "Great website.",
+    author: "Ethan Nath",
+    company: "Outside The Bubbles",
+  },
+  {
+    quote: "Efficient workflow.",
+    author: "Yue Wai-Ming",
+    company: "Mass Music Studios",
+  },
+  {
+    quote: "10/10.",
+    author: "Shakeel Faraz",
+    company: "Corporate Event Tickets",
+  },
+  {
+    quote: "Overall 10/10.",
+    author: "Daniel Taylor",
+    company: "Promo Vehicles",
+  },
+  {
+    quote: "Would highly recommend to others.",
+    author: "Adam Patel",
+    company: "Fastrack Solutions",
   },
 ];

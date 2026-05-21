@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import FloatingContact from "@/components/FloatingContact";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
+import SocialProof from "@/components/SocialProof";
 import Services from "@/components/Services";
 import SplashScreen from "@/components/SplashScreen";
 import WhyJiti from "@/components/WhyJiti";
@@ -49,6 +50,7 @@ export default function PortfolioPage() {
     <div className="relative min-h-screen text-[var(--ink)]">
       <SplashScreen visible={showSplash} />
       <ExperienceGate
+        key={showExperienceGate ? "journey-open" : "journey-closed"}
         visible={showExperienceGate}
         onSelect={handleSelectStart}
         onSkip={() => setShowExperienceGate(false)}
@@ -59,6 +61,7 @@ export default function PortfolioPage() {
         <DeviceShowcase />
         <Services />
         <WhyJiti />
+        <SocialProof />
         <ContactCTA />
       </main>
       <FloatingContact visible={!showSplash && !showExperienceGate} />

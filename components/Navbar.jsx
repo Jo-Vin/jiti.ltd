@@ -7,6 +7,7 @@ import {
   Mail,
   Menu,
   MessageCircle,
+  ShieldCheck,
   Sparkles,
   Wrench,
   X,
@@ -55,23 +56,13 @@ export default function Navbar() {
         className="flex items-center justify-between rounded-full border border-[#dacdbd] bg-white/80 px-3 py-2 text-sm shadow-[0_14px_40px_rgba(84,58,20,0.12)] backdrop-blur-xl sm:px-5"
         aria-label="Primary"
       >
-        <a href="#main-content" className="group flex items-center gap-2.5 text-zinc-950">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-900/10 bg-white shadow-sm">
-            <Image
-              src="/logos/Jiti_Square_Black.png"
-              alt="Jiti Ltd icon"
-              width={34}
-              height={34}
-              className="h-6 w-6 object-contain"
-              priority
-            />
-          </span>
+        <a href="#main-content" className="group flex items-center text-zinc-950">
           <Image
             src="/logos/Jiti_Logo_Black.png"
             alt="Jiti Ltd"
             width={148}
             height={49}
-            className="h-7 w-auto transition group-hover:opacity-90 sm:h-8"
+            className="h-8 w-auto transition group-hover:opacity-90 sm:h-9"
             priority
           />
         </a>
@@ -153,6 +144,16 @@ export default function Navbar() {
                     <span className="inline-flex items-center gap-2">
                       <Wrench className="h-4 w-4" />
                       Services
+                    </span>
+                  </a>
+                  <a
+                    href="#proof"
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center justify-between rounded-xl border border-zinc-900/10 bg-white/86 px-3 py-2 text-sm font-medium text-zinc-900"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4" />
+                      Social proof
                     </span>
                   </a>
                   <a

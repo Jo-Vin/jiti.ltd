@@ -103,10 +103,22 @@ function GuidesJourneyCanvas({ project, compact = false }) {
     project.showcase?.desktopImage ||
     project.showcase?.mobileImage ||
     "/Guides.app_Showcase.webp";
-  const imageFit = project.showcase?.imageFit || "cover";
-  const fitClass = imageFit === "contain" ? "object-contain" : "object-cover";
+  const imageFit = compact
+    ? project.showcase?.mobileImageFit ||
+      project.showcase?.imageFit ||
+      "cover"
+    : project.showcase?.desktopImageFit ||
+      project.showcase?.imageFit ||
+      "contain";
+  const isContain = imageFit === "contain";
+  const fitClass = isContain ? "object-contain" : "object-cover";
   const paddingClass =
-    imageFit === "contain" ? (compact ? "p-1.5" : "p-2.5 sm:p-3") : "";
+    isContain ? (compact ? "p-1.5" : "p-2.5 sm:p-3") : "";
+  const compactBoostClass = compact
+    ? isContain
+      ? "object-center"
+      : "object-top scale-[1.18] sm:scale-[1.22]"
+    : "";
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-2xl border border-[#ddca89] bg-[#fff4c8]">
@@ -116,7 +128,7 @@ function GuidesJourneyCanvas({ project, compact = false }) {
         alt={`${project.name} showcase screenshot`}
         fill
         sizes={compact ? "70vw" : "(min-width: 1024px) 48vw, 92vw"}
-        className={`relative z-[1] ${fitClass} ${paddingClass}`}
+        className={`relative z-[1] transform-gpu ${fitClass} ${paddingClass} ${compactBoostClass}`}
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] p-2.5">
         <div className="inline-flex rounded-full border border-white/70 bg-black/55 px-2.5 py-1 text-[0.54rem] font-semibold uppercase tracking-[0.14em] text-white">
@@ -134,14 +146,9 @@ function GuidesDesktopPanels({ project }) {
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
             <ProjectIcon project={project} className="mb-0 h-11 w-11 rounded-xl p-1" />
-            <div>
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.15em] text-[#6f5c2e]">
-                Guides platform
-              </p>
-              <h3 className="mt-1 text-[2.1rem] leading-[1.02] font-bold text-zinc-900">
-                {project.laptopTitle}
-              </h3>
-            </div>
+            <p className="mt-1 text-[0.62rem] font-semibold uppercase tracking-[0.15em] text-[#6f5c2e]">
+              Guides platform
+            </p>
           </div>
           <span className="rounded-full border border-[#dcc886] bg-white px-3 py-1 text-xs font-semibold text-[#5f4f20]">
             Web + iOS + Android
@@ -273,10 +280,10 @@ function DefaultDesktopPanels({ project }) {
 function GuidesMobilePhone({ project }) {
   return (
     <div className="mx-auto w-[min(100%,12.6rem)] min-w-0 rounded-[2.2rem] border-[7px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)] sm:w-[min(100%,15rem)] sm:border-[8px]">
-      <div className="rounded-[1.7rem] bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152] p-3">
+      <div className="rounded-[1.7rem] bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152] p-2.5">
         <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
 
-        <div className="mt-3 h-[15.4rem] overflow-hidden sm:h-[17.8rem]">
+        <div className="mt-2.5 h-[18.8rem] overflow-hidden sm:h-[21.8rem]">
           <GuidesJourneyCanvas project={project} compact />
         </div>
       </div>
@@ -400,6 +407,15 @@ export default function DeviceShowcase() {
     }
 
     target.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const jumpToNextProject = () => {
+    if (projects.length < 2) {
+      return;
+    }
+
+    const nextIndex = (activeIndex + 1) % projects.length;
+    jumpToProject(nextIndex);
   };
 
   return (
@@ -564,35 +580,35 @@ export default function DeviceShowcase() {
 
                   {activeProject.showcase?.appStoreBadge &&
                   activeProject.showcase?.googlePlayBadge ? (
-                    <div className="mt-3 grid grid-cols-2 gap-2 lg:hidden">
+                    <div className="mt-2.5 grid grid-cols-2 gap-3 lg:hidden">
                       <a
                         href={activeProject.showcase.appStoreUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex min-w-0 items-center justify-center overflow-hidden rounded-xl border border-zinc-900/10 bg-white/86 px-2 py-2"
+                        className="inline-flex min-w-0 items-center justify-center overflow-hidden rounded-xl py-1.5"
                         aria-label={`Open ${activeProject.name} on Apple App Store`}
                       >
                         <Image
                           src={activeProject.showcase.appStoreBadge}
                           alt="Download on the App Store"
-                          width={108}
-                          height={32}
-                          className="h-7 w-full max-w-[6.7rem] object-contain"
+                          width={132}
+                          height={40}
+                          className="h-10 w-auto object-contain"
                         />
                       </a>
                       <a
                         href={activeProject.showcase.googlePlayUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex min-w-0 items-center justify-center overflow-hidden rounded-xl border border-zinc-900/10 bg-white/86 px-2 py-2"
+                        className="inline-flex min-w-0 items-center justify-center overflow-hidden rounded-xl py-1.5"
                         aria-label={`Open ${activeProject.name} on Google Play`}
                       >
                         <Image
                           src={activeProject.showcase.googlePlayBadge}
                           alt="Get it on Google Play"
-                          width={108}
-                          height={32}
-                          className="h-7 w-full max-w-[6.7rem] object-contain"
+                          width={132}
+                          height={40}
+                          className="h-10 w-auto object-contain"
                         />
                       </a>
                     </div>
@@ -620,14 +636,27 @@ export default function DeviceShowcase() {
 
                 <div className="order-3 border-t border-[#decfbf] bg-white/96 px-3 py-1.5 lg:hidden">
                   <div className="overflow-hidden pb-0.5">
-                    <motion.div
-                      className="mb-2.5 flex items-center justify-center gap-1 pr-[6.4rem] text-[0.58rem] font-medium tracking-[0.08em] text-zinc-600/80 uppercase"
-                      animate={{ opacity: [0.5, 0.9, 0.5] }}
-                      transition={{ duration: 2.1, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <span>Scroll for next project</span>
-                      <ChevronDown className="h-3 w-3" />
-                    </motion.div>
+                    {!isFinalProject ? (
+                      <button
+                        type="button"
+                        onClick={jumpToNextProject}
+                        className="mb-2.5 flex w-full items-center justify-center gap-1 pr-[6.4rem] text-[0.58rem] font-medium tracking-[0.08em] text-zinc-600/85 uppercase"
+                        aria-label="Scroll to next project"
+                      >
+                        <span>Scroll for next project</span>
+                        <motion.span
+                          className="inline-flex"
+                          animate={{ y: [0, 3.5, 0], opacity: [0.45, 1, 0.45] }}
+                          transition={{ duration: 1.25, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          <ChevronDown className="h-3.5 w-3.5" />
+                        </motion.span>
+                      </button>
+                    ) : (
+                      <div className="mb-2.5 flex items-center justify-center pr-[6.4rem] text-[0.58rem] font-medium tracking-[0.08em] text-zinc-600/75 uppercase">
+                        You reached the last project
+                      </div>
+                    )}
                     <motion.div
                       key={activeProject.slug}
                       initial={{ x: 14, opacity: 0.86 }}
