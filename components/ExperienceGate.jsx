@@ -21,17 +21,38 @@ export default function ExperienceGate({ visible, onSelect, onSkip }) {
             transition={{ duration: 0.35, ease: "easeOut" }}
           >
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-700/70">
-              Choose your path
+              Guided journey
             </p>
             <h2 className="mt-2 text-[1.95rem] font-bold leading-[1.08] sm:mt-3 sm:text-5xl">
-              What do you want to see first?
+              Let&apos;s show you what work we&apos;ve done.
             </h2>
             <p className="mt-3 max-w-2xl text-[0.96rem] leading-7 text-zinc-700 sm:mt-4 sm:text-base">
-              Pick the lens that matches your intent. You can switch at any time
-              from the sticky navigation.
+              Start with the five-project showcase, then continue to services at the
+              finish line. Or skip and browse the full page normally.
             </p>
 
             <div className="mt-5 grid gap-3 sm:mt-7 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => onSelect("work")}
+                className="group rounded-[1.25rem] border border-[#cfe3dd] bg-white p-4 text-left transition hover:bg-cyan-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 sm:rounded-[1.4rem] sm:p-5"
+              >
+                <span className="mb-4 inline-flex rounded-xl bg-cyan-100 p-2.5 text-zinc-900">
+                  <Sparkles className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" />
+                </span>
+                <p className="text-[1.6rem] leading-tight font-semibold sm:text-xl">
+                  Start the work journey
+                </p>
+                <p className="mt-2 text-[0.96rem] leading-6 text-zinc-700 sm:text-sm sm:leading-7">
+                  Scroll through all five projects. At the finish line, jump to what
+                  we can do next.
+                </p>
+                <p className="mt-3 inline-flex items-center text-sm font-semibold text-zinc-900 sm:mt-4">
+                  Go to portfolio
+                  <ArrowUpRight className="ml-1.5 h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </p>
+              </button>
+
               <button
                 type="button"
                 onClick={() => onSelect("services")}
@@ -41,35 +62,14 @@ export default function ExperienceGate({ visible, onSelect, onSkip }) {
                   <Code2 className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" />
                 </span>
                 <p className="text-[1.6rem] leading-tight font-semibold sm:text-xl">
-                  What do we offer
+                  Jump to services
                 </p>
                 <p className="mt-2 text-[0.96rem] leading-6 text-zinc-700 sm:text-sm sm:leading-7">
-                  Product design, software development, automation, and the full
-                  delivery stack.
+                  Skip straight to product design, software development, automation,
+                  and delivery support.
                 </p>
                 <p className="mt-3 inline-flex items-center text-sm font-semibold text-zinc-900 sm:mt-4">
                   Go to services
-                  <ArrowUpRight className="ml-1.5 h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onSelect("work")}
-                className="group rounded-[1.25rem] border border-[#e1d5c7] bg-white p-4 text-left transition hover:bg-cyan-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 sm:rounded-[1.4rem] sm:p-5"
-              >
-                <span className="mb-4 inline-flex rounded-xl bg-cyan-100 p-2.5 text-zinc-900">
-                  <Sparkles className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" />
-                </span>
-                <p className="text-[1.6rem] leading-tight font-semibold sm:text-xl">
-                  What work have we done
-                </p>
-                <p className="mt-2 text-[0.96rem] leading-6 text-zinc-700 sm:text-sm sm:leading-7">
-                  Scroll the full-screen portfolio wall and see each product in
-                  context while you browse.
-                </p>
-                <p className="mt-3 inline-flex items-center text-sm font-semibold text-zinc-900 sm:mt-4">
-                  Go to portfolio
                   <ArrowUpRight className="ml-1.5 h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </p>
               </button>

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight, MousePointer2 } from "lucide-react";
-import { contact, projects } from "@/data/siteData";
+import { contact } from "@/data/siteData";
 
 export default function Hero() {
   return (
@@ -13,7 +13,7 @@ export default function Hero() {
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
       />
 
-      <div className="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+      <div className="mx-auto w-full max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -50,38 +50,6 @@ export default function Hero() {
             </a>
           </div>
         </motion.div>
-
-        <motion.aside
-          className="rounded-[2rem] border border-[#ddd2c2] bg-white/80 p-5 shadow-[0_20px_60px_rgba(92,65,22,0.14)] backdrop-blur-xl sm:p-7"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, ease: "easeOut", delay: 2.15 }}
-          aria-label="Selected project snapshot"
-        >
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-zinc-600">
-              Selected work
-            </h2>
-            <span className="rounded-full bg-zinc-900 px-3 py-1 text-xs font-semibold text-white">
-              {projects.length} projects
-            </span>
-          </div>
-
-          <div className="mt-5 space-y-3">
-            {projects.slice(0, 3).map((project) => (
-              <article
-                key={project.slug}
-                className="rounded-2xl border border-zinc-900/10 bg-[#fff9f2] px-4 py-3"
-              >
-                <p className="text-sm font-semibold text-zinc-950">{project.name}</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-zinc-600">
-                  {project.category}
-                </p>
-                <p className="mt-2 text-sm text-zinc-700">{project.tagline}</p>
-              </article>
-            ))}
-          </div>
-        </motion.aside>
       </div>
     </section>
   );

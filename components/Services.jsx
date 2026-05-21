@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Code2, Palette, ShoppingBag, Sparkles, Workflow } from "lucide-react";
+import { Code2, Mail, Palette, ShoppingBag, Sparkles, Workflow } from "lucide-react";
 import { services } from "@/data/siteData";
 
 const iconMap = {
   Code2,
+  Mail,
   Palette,
   ShoppingBag,
   Sparkles,

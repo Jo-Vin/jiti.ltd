@@ -39,10 +39,17 @@ export const projects = [
       "Offline app support on iOS and Android",
       "Interactive maps and guided audio",
     ],
+    techStack: [
+      { name: "Python", icon: "FileCode2" },
+      { name: "React", icon: "Atom" },
+      { name: "React Native", icon: "Smartphone" },
+      { name: "AWS", icon: "Cloud" },
+    ],
     services: ["Product design", "Platform engineering", "Mobile app delivery"],
     showcase: {
-      desktopImage: "/logos/guides-store-preview-3.webp",
-      mobileImage: "/logos/guides-store-preview-3.webp",
+      desktopImage: "/Guides.app_Showcase.webp",
+      mobileImage: "/Guides.app_Showcase.png",
+      imageFit: "cover",
       appStoreBadge: "/logos/guides-app-store.svg",
       googlePlayBadge: "/logos/guides-google-play.svg",
       appStoreUrl:
@@ -181,6 +188,13 @@ export const services = [
       "We remove repetitive admin with connected workflows across CRMs, commerce stacks, and messaging systems.",
     bullets: ["CRM automation", "Shopify ecosystems", "Operational analytics"],
     icon: "Workflow",
+  },
+  {
+    title: "Email Design + CRM Setup",
+    description:
+      "We design high-converting email journeys and configure CRM foundations so campaigns and pipelines run smoothly.",
+    bullets: ["Lifecycle email design", "CRM setup and data hygiene", "Template and automation handover"],
+    icon: "Mail",
   },
   {
     title: "E-commerce + Marketplaces",

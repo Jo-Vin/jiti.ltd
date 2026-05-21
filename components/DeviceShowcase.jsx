@@ -2,7 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
+import {
+  ArrowUpRight,
+  Atom,
+  ChevronDown,
+  Cloud,
+  FileCode2,
+  Smartphone,
+} from "lucide-react";
 import Image from "next/image";
 import { projects } from "@/data/siteData";
 
@@ -55,22 +62,67 @@ function ProgressRail({ activeIndex, onSelect }) {
   );
 }
 
-function GuidesPoster({ project, compact = false }) {
-  const imageSrc =
-    project.showcase?.desktopImage ||
-    project.showcase?.mobileImage ||
-    "/logos/guides-store-preview-3.webp";
+const techIconMap = {
+  Atom,
+  Cloud,
+  FileCode2,
+  Smartphone,
+};
+
+function TechStackSection({ stack = [], className = "" }) {
+  if (!stack.length) {
+    return null;
+  }
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-2xl border border-[#dcc886] bg-[#f8e374]">
-      {/* TODO: Swap this with a final high-resolution Guides showcase screenshot when available. */}
+    <div className={className}>
+      <p className="text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-zinc-600">
+        Technologies used
+      </p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {stack.map((item) => {
+          const Icon = techIconMap[item.icon] || FileCode2;
+          return (
+            <span
+              key={`tech-${item.name}`}
+              className="inline-flex items-center gap-1.5 rounded-full border border-zinc-900/12 bg-white px-2.5 py-1 text-[0.62rem] font-semibold tracking-[0.04em] text-zinc-700 uppercase sm:text-[0.66rem]"
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {item.name}
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function GuidesJourneyCanvas({ project, compact = false }) {
+  const imageSrc =
+    (compact ? project.showcase?.mobileImage : project.showcase?.desktopImage) ||
+    project.showcase?.desktopImage ||
+    project.showcase?.mobileImage ||
+    "/Guides.app_Showcase.webp";
+  const imageFit = project.showcase?.imageFit || "cover";
+  const fitClass = imageFit === "contain" ? "object-contain" : "object-cover";
+  const paddingClass =
+    imageFit === "contain" ? (compact ? "p-1.5" : "p-2.5 sm:p-3") : "";
+
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-2xl border border-[#ddca89] bg-[#fff4c8]">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152]" />
       <Image
         src={imageSrc}
-        alt={`${project.name} translated-in-language screenshot`}
+        alt={`${project.name} showcase screenshot`}
         fill
-        sizes={compact ? "90vw" : "(min-width: 1024px) 44vw, 90vw"}
-        className={`object-contain ${compact ? "p-1.5" : "p-3"}`}
+        sizes={compact ? "70vw" : "(min-width: 1024px) 48vw, 92vw"}
+        className={`relative z-[1] ${fitClass} ${paddingClass}`}
       />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] p-2.5">
+        <div className="inline-flex rounded-full border border-white/70 bg-black/55 px-2.5 py-1 text-[0.54rem] font-semibold uppercase tracking-[0.14em] text-white">
+          Live Guides preview
+        </div>
+      </div>
     </div>
   );
 }
@@ -97,7 +149,7 @@ function GuidesDesktopPanels({ project }) {
         </div>
 
         <div className="min-h-0 overflow-hidden">
-          <GuidesPoster project={project} />
+          <GuidesJourneyCanvas project={project} />
         </div>
       </div>
 
@@ -106,7 +158,7 @@ function GuidesDesktopPanels({ project }) {
           Mobile rollout
         </p>
 
-        <div className="mt-3 grid min-h-0 grid-rows-[auto_auto_minmax(0,1fr)_auto] gap-2 overflow-hidden">
+        <div className="mt-3 grid min-h-0 grid-rows-[auto_auto_minmax(0,1fr)_auto_auto] gap-2 overflow-hidden">
           <div className="grid grid-cols-1 gap-2">
             <a
               href={project.showcase?.appStoreUrl}
@@ -166,6 +218,11 @@ function GuidesDesktopPanels({ project }) {
             </div>
           </div>
 
+          <TechStackSection
+            stack={project.techStack}
+            className="rounded-xl border border-zinc-900/8 bg-white/88 px-3 py-2"
+          />
+
           <div className="rounded-xl border border-zinc-900/8 bg-white/88 px-3 py-2">
             <p className="text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-zinc-700">
               A Jiti platform
@@ -219,8 +276,8 @@ function GuidesMobilePhone({ project }) {
       <div className="rounded-[1.7rem] bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152] p-3">
         <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
 
-        <div className="mt-3 h-[15.4rem] overflow-hidden rounded-2xl border border-[#ddca89] bg-[#f8e374] p-1.5 sm:h-[17.8rem]">
-          <GuidesPoster project={project} compact />
+        <div className="mt-3 h-[15.4rem] overflow-hidden sm:h-[17.8rem]">
+          <GuidesJourneyCanvas project={project} compact />
         </div>
       </div>
     </div>
@@ -255,6 +312,7 @@ function DefaultMobilePhone({ project }) {
 
 export default function DeviceShowcase() {
   const stepRefs = useRef([]);
+  const detailsRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -302,7 +360,16 @@ export default function DeviceShowcase() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!detailsRef.current) {
+      return;
+    }
+
+    detailsRef.current.scrollTop = 0;
+  }, [activeIndex]);
+
   const activeProject = projects[activeIndex];
+  const isFinalProject = activeIndex === projects.length - 1;
   const isGuidesActive = activeProject.slug === "guides-app";
   const mobileWheelProjects = projects.map((_, offset) => {
     const wheelIndex = (activeIndex + offset) % projects.length;
@@ -324,6 +391,15 @@ export default function DeviceShowcase() {
     const viewportOffset = window.innerHeight * 0.24;
     const top = target.getBoundingClientRect().top + window.scrollY - viewportOffset;
     window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  };
+
+  const jumpToServices = () => {
+    const target = document.getElementById("services");
+    if (!target) {
+      return;
+    }
+
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
@@ -418,7 +494,10 @@ export default function DeviceShowcase() {
                   </AnimatePresence>
                 </div>
 
-                <aside className="order-2 flex min-h-0 min-w-0 flex-col overflow-y-auto overflow-x-hidden bg-white/92 px-4 pb-3 pt-4 lg:order-1 lg:overflow-hidden lg:px-7 lg:py-8">
+                <aside
+                  ref={detailsRef}
+                  className="order-2 flex min-h-0 min-w-0 flex-col overflow-y-hidden overflow-x-hidden bg-white/92 px-4 pb-3 pt-4 lg:order-1 lg:overflow-hidden lg:px-7 lg:py-8"
+                >
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-zinc-600">
                     Now showing
                   </p>
@@ -462,9 +541,30 @@ export default function DeviceShowcase() {
                     ))}
                   </ul>
 
+                  <TechStackSection stack={activeProject.techStack} className="mt-4" />
+
+                  {isFinalProject ? (
+                    <div className="mt-4 rounded-2xl border border-[#dfcfb8] bg-[#fff8ea] p-3">
+                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-zinc-700/80">
+                        Finish line reached
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-zinc-800">
+                        Ready to see what we can do next?
+                      </p>
+                      <button
+                        type="button"
+                        onClick={jumpToServices}
+                        className="mt-2 inline-flex items-center rounded-full bg-zinc-900 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-zinc-800"
+                      >
+                        Go to services
+                        <ArrowUpRight className="ml-1.5 h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ) : null}
+
                   {activeProject.showcase?.appStoreBadge &&
                   activeProject.showcase?.googlePlayBadge ? (
-                    <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:hidden">
+                    <div className="mt-3 grid grid-cols-2 gap-2 lg:hidden">
                       <a
                         href={activeProject.showcase.appStoreUrl}
                         target="_blank"
@@ -477,7 +577,7 @@ export default function DeviceShowcase() {
                           alt="Download on the App Store"
                           width={108}
                           height={32}
-                          className="h-8 w-full max-w-[7.2rem] object-contain"
+                          className="h-7 w-full max-w-[6.7rem] object-contain"
                         />
                       </a>
                       <a
@@ -492,7 +592,7 @@ export default function DeviceShowcase() {
                           alt="Get it on Google Play"
                           width={108}
                           height={32}
-                          className="h-8 w-full max-w-[7.2rem] object-contain"
+                          className="h-7 w-full max-w-[6.7rem] object-contain"
                         />
                       </a>
                     </div>
@@ -521,7 +621,7 @@ export default function DeviceShowcase() {
                 <div className="order-3 border-t border-[#decfbf] bg-white/96 px-3 py-1.5 lg:hidden">
                   <div className="overflow-hidden pb-0.5">
                     <motion.div
-                      className="mb-1 flex items-center justify-center gap-1 text-[0.58rem] font-medium tracking-[0.08em] text-zinc-600/80 uppercase"
+                      className="mb-2.5 flex items-center justify-center gap-1 pr-[6.4rem] text-[0.58rem] font-medium tracking-[0.08em] text-zinc-600/80 uppercase"
                       animate={{ opacity: [0.5, 0.9, 0.5] }}
                       transition={{ duration: 2.1, repeat: Infinity, ease: "easeInOut" }}
                     >
