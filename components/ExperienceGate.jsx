@@ -73,7 +73,7 @@ export default function ExperienceGate({ visible, onSelect, onSkip }) {
                   <Sparkles className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" />
                 </span>
                 <p className="text-[1.6rem] leading-tight font-semibold sm:text-xl">
-                  Start the work journey
+                  Start the showcase journey
                 </p>
                 <p className="mt-2 text-[0.96rem] leading-6 text-zinc-700 sm:text-sm sm:leading-7">
                   Scroll through all five projects. At the finish line, jump to what

@@ -21,21 +21,28 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 2.0 }}
         >
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-zinc-900/10 bg-white/80 px-3 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-zinc-700 shadow-sm backdrop-blur sm:mb-4">
-            <span className="flex items-center gap-0.5 text-amber-500">
-              {stars.map((_, index) => (
-                <Star key={`hero-star-${index}`} className="h-3 w-3 fill-current" />
-              ))}
-            </span>
-            <span>
-              {socialProof.rating}.0 rating | {socialProof.totalReviews}+ reviews
-            </span>
+          <div className="mb-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <p className="inline-flex h-9 items-center gap-2.5 rounded-full border border-zinc-900/10 bg-white/88 px-3.5 pr-4 text-[0.63rem] font-semibold uppercase tracking-[0.14em] text-zinc-700 shadow-[0_6px_18px_rgba(52,38,16,0.1)] backdrop-blur">
+              <span className="flex items-center gap-0.5 text-amber-500">
+                {stars.map((_, index) => (
+                  <Star key={`hero-star-${index}`} className="h-3 w-3 fill-current" />
+                ))}
+              </span>
+              <span className="whitespace-nowrap">
+                {socialProof.rating}.0 rating
+                <span className="mx-1.5 text-zinc-400" aria-hidden="true">
+                  |
+                </span>
+                {socialProof.totalReviews}+ reviews
+              </span>
+            </p>
+
+            <p className="inline-flex min-h-9 items-center gap-2 rounded-full border border-zinc-900/10 bg-white/80 px-4 py-1.5 text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-zinc-700 shadow-[0_6px_18px_rgba(52,38,16,0.08)] backdrop-blur sm:text-[0.66rem] sm:tracking-[0.18em]">
+              <MousePointer2 className="h-3.5 w-3.5 shrink-0" />
+              <span>Product design + software + automation</span>
+            </p>
           </div>
 
-          <p className="mb-5 inline-flex items-center rounded-full border border-zinc-900/10 bg-white/72 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-700 shadow-sm backdrop-blur">
-            <MousePointer2 className="mr-2 h-3.5 w-3.5" />
-            Product design + software + automation
-          </p>
           <h1 className="max-w-4xl text-5xl leading-[0.9] font-bold text-zinc-950 sm:text-6xl lg:text-8xl">
             We build digital products that feel launch-ready from day one.
           </h1>
