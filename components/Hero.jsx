@@ -6,9 +6,9 @@ import { contact, projects } from "@/data/siteData";
 
 export default function Hero() {
   return (
-    <section className="relative px-4 pb-18 pt-12 sm:px-6 lg:px-10">
+    <section className="relative overflow-x-clip px-4 pb-18 pt-12 sm:px-6 lg:px-10">
       <motion.div
-        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[42rem] w-[42rem] -translate-x-1/2 rounded-full bg-gradient-to-r from-cyan-300/35 via-amber-300/35 to-pink-300/30 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-gradient-to-r from-cyan-300/35 via-amber-300/35 to-pink-300/30 blur-3xl sm:h-[42rem] sm:w-[42rem]"
         animate={{ rotate: [0, 360] }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
       />

@@ -215,7 +215,7 @@ function DefaultDesktopPanels({ project }) {
 
 function GuidesMobilePhone({ project }) {
   return (
-    <div className="mx-auto w-[min(100%,15rem)] min-w-0 rounded-[2.2rem] border-[8px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)]">
+    <div className="mx-auto w-[min(100%,13.4rem)] min-w-0 rounded-[2.2rem] border-[8px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)] sm:w-[min(100%,15rem)]">
       <div className="rounded-[1.7rem] bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152] p-3">
         <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
 
@@ -229,7 +229,7 @@ function GuidesMobilePhone({ project }) {
 
 function DefaultMobilePhone({ project }) {
   return (
-    <div className="mx-auto w-[min(100%,15rem)] min-w-0 rounded-[2.2rem] border-[8px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)]">
+    <div className="mx-auto w-[min(100%,13.4rem)] min-w-0 rounded-[2.2rem] border-[8px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)] sm:w-[min(100%,15rem)]">
       <div className={`rounded-[1.7rem] bg-gradient-to-br p-4 ${project.gradient}`}>
         <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
         <p className="mt-4 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-zinc-800/72">
@@ -326,8 +326,8 @@ export default function DeviceShowcase() {
   };
 
   return (
-    <section id="work" className="px-2 pb-12 pt-6 sm:px-4 sm:pt-8 lg:px-8">
-      <div className="mx-auto mb-3 max-w-5xl px-2 md:hidden">
+    <section id="work" className="px-0 pb-10 pt-4 sm:px-4 sm:pt-8 lg:px-8">
+      <div className="mx-auto mb-2 max-w-5xl px-4 md:hidden">
         <p className="inline-flex rounded-full border border-zinc-900/12 bg-white/85 px-3 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-zinc-700 shadow-sm">
           Selected Work
         </p>
@@ -349,11 +349,11 @@ export default function DeviceShowcase() {
 
       <div className="relative">
         <div className="sticky top-0 h-[100dvh]">
-          <div className="relative mx-auto h-full max-w-[1600px] px-2 pb-2 pt-2 sm:px-4 sm:pt-3 lg:px-8 lg:pt-4">
+          <div className="relative mx-auto h-full max-w-[1600px] px-0 pb-0 pt-0 sm:px-4 sm:pt-3 lg:px-8 lg:pt-4">
             <ProgressRail activeIndex={activeIndex} onSelect={jumpToProject} />
 
-            <div className="h-full overflow-hidden rounded-[2rem] border border-[#d9cdbf] bg-[#fffaf3] shadow-[0_22px_70px_rgba(87,60,18,0.15)] sm:rounded-[2.5rem]">
-              <div className="grid h-full grid-rows-[47svh_minmax(0,1fr)_auto] lg:grid-cols-[0.38fr_0.62fr] lg:grid-rows-1">
+            <div className="h-full max-w-full overflow-hidden rounded-none border border-[#d9cdbf] bg-[#fffaf3] shadow-[0_22px_70px_rgba(87,60,18,0.15)] sm:rounded-[2.5rem]">
+              <div className="grid h-full grid-rows-[42svh_minmax(0,1fr)_auto] sm:grid-rows-[47svh_minmax(0,1fr)_auto] lg:grid-cols-[0.38fr_0.62fr] lg:grid-rows-1">
                 <div
                   className={`order-1 relative overflow-hidden border-b border-[#decfbf] bg-gradient-to-br ${activeProject.gradient} lg:order-2 lg:border-b-0 lg:border-l`}
                 >
@@ -417,7 +417,7 @@ export default function DeviceShowcase() {
                   </AnimatePresence>
                 </div>
 
-                <aside className="order-2 flex min-w-0 flex-col overflow-hidden bg-white/92 px-4 pb-3 pt-4 lg:order-1 lg:px-7 lg:py-8">
+                <aside className="order-2 flex min-w-0 flex-col overflow-y-auto overflow-x-hidden bg-white/92 px-4 pb-3 pt-4 lg:order-1 lg:overflow-hidden lg:px-7 lg:py-8">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-zinc-600">
                     Now showing
                   </p>
@@ -518,7 +518,7 @@ export default function DeviceShowcase() {
                 </aside>
 
                 <div className="order-3 border-t border-[#decfbf] bg-white/96 px-3 py-1.5 lg:hidden">
-                  <div className="-mx-1 overflow-x-auto px-1 pb-0.5 pr-[5.8rem] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="overflow-x-auto pb-0.5 pr-24 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                     <motion.div
                       key={activeProject.slug}
                       initial={{ x: 14, opacity: 0.86 }}
