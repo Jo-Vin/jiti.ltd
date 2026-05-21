@@ -13,14 +13,16 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"]
 });
 
+const metaDescription =
+  "Jiti Ltd designs and builds launch-ready digital products - websites, apps, automation, e-commerce, and branding for ambitious teams.";
+
 export const metadata = {
   metadataBase: new URL("https://www.jiti.ltd"),
   title: {
     default: "Jiti Ltd | Product Design + Software Studio",
     template: "%s | Jiti Ltd"
   },
-  description:
-    "Jiti Ltd is a premium studio for product design, software development, web and app builds, automation, e-commerce, marketplaces, and branding.",
+  description: metaDescription,
   keywords: [
     "Jiti Ltd",
     "product design studio",
@@ -34,8 +36,7 @@ export const metadata = {
   ],
   openGraph: {
     title: "Jiti Ltd | Product Design + Software Studio",
-    description:
-      "Premium product design, software development, automation, and digital build work for ambitious teams.",
+    description: metaDescription,
     url: "https://www.jiti.ltd",
     siteName: "Jiti Ltd",
     locale: "en_GB",
@@ -52,8 +53,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Jiti Ltd | Product Design + Software Studio",
-    description:
-      "Premium product design, software development, automation, and digital build work for ambitious teams.",
+    description: metaDescription,
     images: ["/og-image.svg"]
   },
   icons: {
