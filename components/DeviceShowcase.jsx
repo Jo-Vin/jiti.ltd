@@ -316,9 +316,18 @@ function DefaultMobilePhone({ project }) {
 }
 
 export default function DeviceShowcase() {
+  const showcaseRef = useRef(null);
   const stepRefs = useRef([]);
   const detailsRef = useRef(null);
+  const activeIndexRef = useRef(0);
+  const scrollStepLockedRef = useRef(false);
+  const scrollStepUnlockTimerRef = useRef(null);
+  const touchStartRef = useRef({ x: 0, y: 0 });
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   useEffect(() => {
     const steps = stepRefs.current.filter(Boolean);
@@ -373,6 +382,14 @@ export default function DeviceShowcase() {
     detailsRef.current.scrollTop = 0;
   }, [activeIndex]);
 
+  useEffect(() => {
+    return () => {
+      if (scrollStepUnlockTimerRef.current) {
+        window.clearTimeout(scrollStepUnlockTimerRef.current);
+      }
+    };
+  }, []);
+
   const activeProject = projects[activeIndex];
   const hasActiveLogo = Boolean(activeProject.logo?.src);
   const isFinalProject = activeIndex === projects.length - 1;
@@ -399,6 +416,111 @@ export default function DeviceShowcase() {
     window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   };
 
+  useEffect(() => {
+    const isShowcasePinned = () => {
+      const showcase = showcaseRef.current;
+      if (!showcase) {
+        return false;
+      }
+
+      const bounds = showcase.getBoundingClientRect();
+      return bounds.top <= 0 && bounds.bottom >= window.innerHeight;
+    };
+
+    const queueDirectionalStep = (direction) => {
+      if (scrollStepLockedRef.current) {
+        return true;
+      }
+
+      const currentIndex = activeIndexRef.current;
+      const nextIndex = currentIndex + direction;
+      if (nextIndex < 0 || nextIndex > projects.length - 1) {
+        return false;
+      }
+
+      scrollStepLockedRef.current = true;
+      jumpToProject(nextIndex);
+
+      if (scrollStepUnlockTimerRef.current) {
+        window.clearTimeout(scrollStepUnlockTimerRef.current);
+      }
+
+      scrollStepUnlockTimerRef.current = window.setTimeout(() => {
+        scrollStepLockedRef.current = false;
+      }, 560);
+
+      return true;
+    };
+
+    const handleWheel = (event) => {
+      if (!isShowcasePinned()) {
+        return;
+      }
+
+      if (Math.abs(event.deltaY) < 14) {
+        return;
+      }
+
+      const didQueueStep = queueDirectionalStep(event.deltaY > 0 ? 1 : -1);
+      if (didQueueStep) {
+        event.preventDefault();
+      }
+    };
+
+    const handleTouchStart = (event) => {
+      if (!isShowcasePinned()) {
+        return;
+      }
+
+      const touch = event.touches?.[0];
+      if (!touch) {
+        return;
+      }
+
+      touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    };
+
+    const handleTouchMove = (event) => {
+      if (!isShowcasePinned()) {
+        return;
+      }
+
+      const touch = event.touches?.[0];
+      if (!touch) {
+        return;
+      }
+
+      const deltaY = touchStartRef.current.y - touch.clientY;
+      const deltaX = touchStartRef.current.x - touch.clientX;
+
+      if (Math.abs(deltaY) < 26 || Math.abs(deltaY) < Math.abs(deltaX)) {
+        return;
+      }
+
+      const didQueueStep = queueDirectionalStep(deltaY > 0 ? 1 : -1);
+      if (didQueueStep) {
+        event.preventDefault();
+        touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+      }
+    };
+
+    const handleTouchEnd = () => {
+      touchStartRef.current = { x: 0, y: 0 };
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
+
   const jumpToServices = () => {
     const target = document.getElementById("services");
     if (!target) {
@@ -418,7 +540,11 @@ export default function DeviceShowcase() {
   };
 
   return (
-    <section id="work" className="overflow-x-clip px-0 pb-10 pt-4 sm:px-4 sm:pt-8 lg:px-8">
+    <section
+      id="work"
+      ref={showcaseRef}
+      className="overflow-x-clip px-0 pb-10 pt-4 sm:px-4 sm:pt-8 lg:px-8"
+    >
       <div className="mx-auto mb-2 max-w-5xl px-4 md:hidden">
         <p className="inline-flex rounded-full border border-zinc-900/12 bg-white/85 px-3 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-zinc-700 shadow-sm">
           Selected Work
@@ -644,6 +770,9 @@ export default function DeviceShowcase() {
                 </aside>
 
                 <div className="order-3 border-t border-[#decfbf] bg-white/96 px-3 py-1.5 lg:hidden">
+                  <p className="mb-1 text-center text-[0.56rem] font-semibold uppercase tracking-[0.16em] text-zinc-600">
+                    Project {activeIndex + 1} of {projects.length}
+                  </p>
                   <div className="overflow-hidden pb-0.5">
                     <motion.div
                       key={activeProject.slug}
@@ -692,7 +821,7 @@ export default function DeviceShowcase() {
                 stepRefs.current[index] = node;
               }}
               data-step-index={index}
-              className="h-[76svh] md:h-[78svh]"
+              className="h-[86svh] md:h-[88svh]"
             />
           ))}
         </div>
