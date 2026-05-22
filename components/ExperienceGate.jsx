@@ -1,35 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Code2, Sparkles } from "lucide-react";
 
-const AUTO_START_SECONDS = 10;
+const AUTO_START_SECONDS = 5;
 
-export default function ExperienceGate({ visible, onSelect, onSkip }) {
+export default function ExperienceGate({ visible, onSelect }) {
   const [countdown, setCountdown] = useState(AUTO_START_SECONDS);
+  const hasStartedRef = useRef(false);
+
+  const startShowcaseJourney = useCallback(() => {
+    if (hasStartedRef.current) {
+      return;
+    }
+
+    hasStartedRef.current = true;
+    onSelect("work");
+  }, [onSelect]);
 
   useEffect(() => {
     if (!visible) {
       return undefined;
     }
 
+    hasStartedRef.current = false;
+
     const timer = window.setInterval(() => {
       setCountdown((current) => {
         const next = Math.max(current - 1, 0);
         if (next === 0) {
           window.clearInterval(timer);
-          window.setTimeout(() => onSelect("work"), 240);
+          window.setTimeout(() => {
+            startShowcaseJourney();
+          }, 180);
         }
         return next;
       });
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [visible, onSelect]);
-
-  const progressPercent =
-    ((AUTO_START_SECONDS - countdown) / AUTO_START_SECONDS) * 100;
+  }, [visible, startShowcaseJourney]);
 
   return (
     <AnimatePresence>
@@ -52,77 +62,23 @@ export default function ExperienceGate({ visible, onSelect, onSkip }) {
             }}
             transition={{ duration: 0.38, ease: "easeOut" }}
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-700/70">
-              Guided journey
-            </p>
-            <h2 className="mt-2 text-[1.95rem] font-bold leading-[1.08] sm:mt-3 sm:text-5xl">
-              Let&apos;s show you what work we&apos;ve done.
+            <h2 className="text-[2rem] font-bold leading-[1.05] text-zinc-950 sm:text-5xl">
+              Welcome to Jiti
             </h2>
-            <p className="mt-3 max-w-2xl text-[0.96rem] leading-7 text-zinc-700 sm:mt-4 sm:text-base">
-              Start with the five-project showcase, then continue to services at the
-              finish line. Or skip and browse the full page normally.
+            <p className="mt-3 text-[0.95rem] font-medium text-zinc-700 sm:mt-4 sm:text-base">
+              The showcase journey will begin in
+            </p>
+            <p className="mt-2 text-5xl font-bold leading-none text-zinc-950 sm:text-6xl">
+              {countdown}
             </p>
 
-            <div className="mt-5 grid gap-3 sm:mt-7 sm:grid-cols-2">
-              <button
-                type="button"
-                onClick={() => onSelect("work")}
-                className="group rounded-[1.25rem] border border-[#cfe3dd] bg-white p-4 text-left transition hover:bg-cyan-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 sm:rounded-[1.4rem] sm:p-5"
-              >
-                <span className="mb-4 inline-flex rounded-xl bg-cyan-100 p-2.5 text-zinc-900">
-                  <Sparkles className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" />
-                </span>
-                <p className="text-[1.6rem] leading-tight font-semibold sm:text-xl">
-                  Start the showcase journey
-                </p>
-                <p className="mt-2 text-[0.96rem] leading-6 text-zinc-700 sm:text-sm sm:leading-7">
-                  Scroll through all five projects. At the finish line, jump to what
-                  we can do next.
-                </p>
-                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-900/10">
-                  <motion.div
-                    className="h-full rounded-full bg-zinc-900"
-                    animate={{ width: `${progressPercent}%` }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                  />
-                </div>
-                <p className="mt-3 inline-flex items-center text-sm font-semibold text-zinc-900 sm:mt-4">
-                  Go to portfolio ({countdown})
-                  <ArrowUpRight className="ml-1.5 h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onSelect("services")}
-                className="group rounded-[1.25rem] border border-[#e1d5c7] bg-white p-4 text-left transition hover:bg-amber-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 sm:rounded-[1.4rem] sm:p-5"
-              >
-                <span className="mb-4 inline-flex rounded-xl bg-amber-100 p-2.5 text-zinc-900">
-                  <Code2 className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" />
-                </span>
-                <p className="text-[1.6rem] leading-tight font-semibold sm:text-xl">
-                  Jump to services
-                </p>
-                <p className="mt-2 text-[0.96rem] leading-6 text-zinc-700 sm:text-sm sm:leading-7">
-                  Skip straight to product design, software development, automation,
-                  and delivery support.
-                </p>
-                <p className="mt-3 inline-flex items-center text-sm font-semibold text-zinc-900 sm:mt-4">
-                  Go to services
-                  <ArrowUpRight className="ml-1.5 h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </p>
-              </button>
-            </div>
-
-            <div className="mt-5 sm:mt-6">
-              <button
-                type="button"
-                onClick={onSkip}
-                className="text-sm font-semibold text-zinc-700 underline decoration-zinc-500/50 underline-offset-4 transition hover:text-zinc-950"
-              >
-                Explore the full page
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={startShowcaseJourney}
+              className="mt-6 inline-flex items-center rounded-full border border-zinc-900/14 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
+            >
+              Start now
+            </button>
           </motion.div>
         </motion.div>
       ) : null}

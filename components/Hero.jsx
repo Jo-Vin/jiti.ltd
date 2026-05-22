@@ -1,11 +1,47 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, MousePointer2, Star } from "lucide-react";
 import { contact, socialProof } from "@/data/siteData";
 
-export default function Hero() {
+const PORTFOLIO_COUNTDOWN_SECONDS = 30;
+
+export default function Hero({ onViewPortfolio, countdownActive = false }) {
   const stars = Array.from({ length: socialProof.rating });
+  const [portfolioCountdown, setPortfolioCountdown] = useState(
+    PORTFOLIO_COUNTDOWN_SECONDS,
+  );
+  const hasTriggeredPortfolioRef = useRef(false);
+
+  const startPortfolioJourney = useCallback(() => {
+    if (hasTriggeredPortfolioRef.current) {
+      return;
+    }
+
+    hasTriggeredPortfolioRef.current = true;
+    onViewPortfolio?.();
+  }, [onViewPortfolio]);
+
+  useEffect(() => {
+    if (!countdownActive || hasTriggeredPortfolioRef.current) {
+      return undefined;
+    }
+
+    if (portfolioCountdown === 0) {
+      const autoTimer = window.setTimeout(() => {
+        startPortfolioJourney();
+      }, 140);
+
+      return () => window.clearTimeout(autoTimer);
+    }
+
+    const tickTimer = window.setTimeout(() => {
+      setPortfolioCountdown((current) => Math.max(current - 1, 0));
+    }, 1000);
+
+    return () => window.clearTimeout(tickTimer);
+  }, [countdownActive, portfolioCountdown, startPortfolioJourney]);
 
   return (
     <section className="relative overflow-x-clip px-4 pb-18 pt-12 sm:px-6 lg:px-10">
@@ -52,22 +88,33 @@ export default function Hero() {
             thinking with engineering clarity to help ambitious teams move faster.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href={contact.instagramLink}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
+          <div className="mt-8 max-w-xl space-y-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <a
+                href={contact.instagramLink}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
+              >
+                DM on Instagram
+                <ArrowUpRight className="ml-2 h-4 w-4" />
+              </a>
+              <a
+                href={contact.emailLink}
+                className="inline-flex items-center justify-center rounded-full border border-zinc-900/15 bg-white/80 px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
+              >
+                Email us
+              </a>
+            </div>
+
+            <button
+              type="button"
+              onClick={startPortfolioJourney}
+              className="inline-flex w-full items-center justify-center rounded-full border border-zinc-900/14 bg-white/88 px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70 sm:w-auto"
             >
-              DM on Instagram
+              {countdownActive ? `View Portfolio (${portfolioCountdown})` : "View Portfolio"}
               <ArrowUpRight className="ml-2 h-4 w-4" />
-            </a>
-            <a
-              href={contact.emailLink}
-              className="inline-flex items-center justify-center rounded-full border border-zinc-900/15 bg-white/80 px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
-            >
-              {contact.email}
-            </a>
+            </button>
           </div>
         </motion.div>
       </div>

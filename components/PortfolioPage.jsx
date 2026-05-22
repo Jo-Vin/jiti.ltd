@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import ContactCTA from "@/components/ContactCTA";
 import DeviceShowcase from "@/components/DeviceShowcase";
-import ExperienceGate from "@/components/ExperienceGate";
 import Footer from "@/components/Footer";
 import FloatingContact from "@/components/FloatingContact";
 import Hero from "@/components/Hero";
@@ -15,57 +14,48 @@ import WhyJiti from "@/components/WhyJiti";
 
 export default function PortfolioPage() {
   const [showSplash, setShowSplash] = useState(true);
-  const [showExperienceGate, setShowExperienceGate] = useState(false);
+  const [showcaseHintKey, setShowcaseHintKey] = useState(0);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setShowSplash(false);
-      setShowExperienceGate(true);
     }, 1800);
 
     return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    const shouldLock = showSplash || showExperienceGate;
-    document.body.style.overflow = shouldLock ? "hidden" : "";
+    document.body.style.overflow = showSplash ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
     };
-  }, [showSplash, showExperienceGate]);
+  }, [showSplash]);
 
-  const handleSelectStart = (sectionId) => {
-    setShowExperienceGate(false);
+  const scrollToShowcase = () => {
+    const target = document.getElementById("work");
+    if (!target) {
+      return;
+    }
 
-    window.setTimeout(() => {
-      const target = document.getElementById(sectionId);
-      if (target) {
-        const top = target.getBoundingClientRect().top + window.scrollY - 8;
-        window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-      }
-    }, 540);
+    const top = target.getBoundingClientRect().top + window.scrollY - 8;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    setShowcaseHintKey((current) => current + 1);
   };
 
   return (
     <div className="relative min-h-screen text-[var(--ink)]">
       <SplashScreen visible={showSplash} />
-      <ExperienceGate
-        key={showExperienceGate ? "journey-open" : "journey-closed"}
-        visible={showExperienceGate}
-        onSelect={handleSelectStart}
-        onSkip={() => setShowExperienceGate(false)}
-      />
       <Navbar />
       <main id="main-content" className="pt-4">
-        <Hero />
-        <DeviceShowcase />
+        <Hero onViewPortfolio={scrollToShowcase} countdownActive={false} />
+        <DeviceShowcase onboardingHintKey={showcaseHintKey} />
         <Services />
         <WhyJiti />
         <SocialProof />
         <ContactCTA />
       </main>
-      <FloatingContact visible={!showSplash && !showExperienceGate} />
+      <FloatingContact visible={!showSplash} />
       <Footer />
     </div>
   );

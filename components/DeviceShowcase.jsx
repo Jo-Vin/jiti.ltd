@@ -69,6 +69,18 @@ const techIconMap = {
   Smartphone,
 };
 
+function getCategoryTags(category) {
+  if (Array.isArray(category)) {
+    return category.filter(Boolean);
+  }
+
+  if (typeof category === "string" && category.trim()) {
+    return [category];
+  }
+
+  return [];
+}
+
 function TechStackSection({ stack = [], className = "" }) {
   if (!stack.length) {
     return null;
@@ -315,7 +327,7 @@ function DefaultMobilePhone({ project }) {
   );
 }
 
-export default function DeviceShowcase() {
+export default function DeviceShowcase({ onboardingHintKey = 0 }) {
   const showcaseRef = useRef(null);
   const stepRefs = useRef([]);
   const detailsRef = useRef(null);
@@ -324,6 +336,7 @@ export default function DeviceShowcase() {
   const scrollStepUnlockTimerRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0 });
   const [activeIndex, setActiveIndex] = useState(0);
+  const [dismissedOnboardingHintKey, setDismissedOnboardingHintKey] = useState(0);
 
   useEffect(() => {
     activeIndexRef.current = activeIndex;
@@ -390,7 +403,22 @@ export default function DeviceShowcase() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!onboardingHintKey || onboardingHintKey <= dismissedOnboardingHintKey) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      setDismissedOnboardingHintKey(onboardingHintKey);
+    }, 3600);
+
+    return () => window.clearTimeout(timer);
+  }, [onboardingHintKey, dismissedOnboardingHintKey]);
+
+  const showOnboardingHint = onboardingHintKey > dismissedOnboardingHintKey;
+
   const activeProject = projects[activeIndex];
+  const activeCategoryTags = getCategoryTags(activeProject.category);
   const hasActiveLogo = Boolean(activeProject.logo?.src);
   const isFinalProject = activeIndex === projects.length - 1;
   const isGuidesActive = activeProject.slug === "guides-app";
@@ -552,6 +580,19 @@ export default function DeviceShowcase() {
         <h2 className="mt-3 text-2xl leading-tight font-bold text-zinc-950">
           Scroll to preview each project
         </h2>
+        <AnimatePresence>
+          {showOnboardingHint ? (
+            <motion.p
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: [0.3, 1, 0.3, 1, 0.3], y: [4, 0, 0, 0, 0] }}
+              exit={{ opacity: 0, y: 2 }}
+              transition={{ duration: 2.4, ease: "easeInOut" }}
+              className="mt-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-zinc-600"
+            >
+              Scroll to view other projects
+            </motion.p>
+          ) : null}
+        </AnimatePresence>
       </div>
 
       <div className="mx-auto mb-4 hidden max-w-5xl px-2 md:block md:px-4">
@@ -563,6 +604,19 @@ export default function DeviceShowcase() {
           <br />
           with brand-led context.
         </h2>
+        <AnimatePresence>
+          {showOnboardingHint ? (
+            <motion.p
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: [0.25, 0.9, 0.25, 0.9, 0.25], y: [5, 0, 0, 0, 0] }}
+              exit={{ opacity: 0, y: 2 }}
+              transition={{ duration: 2.6, ease: "easeInOut" }}
+              className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-600"
+            >
+              Scroll to view other projects
+            </motion.p>
+          ) : null}
+        </AnimatePresence>
       </div>
 
       <div className="relative">
@@ -610,15 +664,24 @@ export default function DeviceShowcase() {
                         <div className="absolute inset-0 bg-white/10" />
 
                         <div className="relative hidden h-full rounded-[1.6rem] border border-white/50 bg-white/74 p-5 shadow-sm lg:block">
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between gap-3">
                             <div className="flex items-center gap-2">
                               <span className="h-3 w-3 rounded-full bg-rose-400" />
                               <span className="h-3 w-3 rounded-full bg-amber-300" />
                               <span className="h-3 w-3 rounded-full bg-emerald-400" />
                             </div>
-                            <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-zinc-700">
-                              {activeProject.category}
-                            </span>
+                            {activeCategoryTags.length ? (
+                              <div className="flex flex-wrap justify-end gap-1.5">
+                                {activeCategoryTags.map((categoryTag) => (
+                                  <span
+                                    key={`${activeProject.slug}-desktop-tag-${categoryTag}`}
+                                    className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-zinc-700"
+                                  >
+                                    {categoryTag}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : null}
                           </div>
 
                           {isGuidesActive ? (
@@ -670,11 +733,18 @@ export default function DeviceShowcase() {
                     ) : null}
                   </div>
 
-                  <div className="mt-2">
-                    <span className="inline-flex rounded-full border border-zinc-900/16 px-2.5 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-zinc-700 sm:text-[0.72rem]">
-                      {activeProject.category}
-                    </span>
-                  </div>
+                  {activeCategoryTags.length ? (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {activeCategoryTags.map((categoryTag) => (
+                        <span
+                          key={`${activeProject.slug}-details-tag-${categoryTag}`}
+                          className="inline-flex rounded-full border border-zinc-900/16 px-2.5 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-zinc-700 sm:text-[0.72rem]"
+                        >
+                          {categoryTag}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
 
                   <p className="mt-3 break-words text-sm leading-6 text-zinc-700 sm:text-base sm:leading-7">
                     {activeProject.summary}

@@ -19,7 +19,7 @@ export const projects = [
     slug: "guides-app",
     name: "Guides.app",
     shortName: "Guides",
-    category: "Travel Tech",
+    category: ["Travel Tech", "App", "Web", "QR"],
     tagline:
       "A self-guided tour platform for web, iOS, and Android with offline-first mobile experiences.",
     summary:
@@ -68,62 +68,40 @@ export const projects = [
     },
   },
   {
-    slug: "property-codes",
-    name: "Property.Codes",
-    shortName: "Property",
-    category: "PropTech",
+    slug: "disposable-app",
+    name: "Disposable.app",
+    shortName: "Disposable",
+    category: ["Photo Sharing", "App", "PHP", "Co-founded"],
     tagline:
-      "A patent-pending hot lead generator for estate agents with real-time notifications.",
+      "International photo-sharing app startup built in PHP, with outreach-led growth.",
     summary:
-      "We built a lead-intent pipeline that captures buyer signals, scores urgency, and alerts sales teams instantly so high-intent prospects are reached first.",
-    gradient: "from-lime-200 via-emerald-100 to-teal-200",
-    accent: "bg-emerald-600",
-    accentColor: "#10b981",
-    laptopTitle: "Lead signal intelligence",
-    phoneTitle: "Agent alert stream",
+      "Co-founded and developed Disposable.app, an international photo-sharing startup used in over 120 countries and now ranking #1 on Google.com.",
+    gradient: "from-cyan-200 via-sky-100 to-indigo-200",
+    accent: "bg-sky-600",
+    accentColor: "#0284c7",
+    laptopTitle: "Global photo-sharing growth engine",
+    phoneTitle: "International sharing feed",
     logo: {
-      text: "Property.Codes",
+      text: "Disposable.app",
       src: "",
-      alt: "Property.Codes logo",
+      alt: "Disposable.app logo",
     },
     highlights: [
-      "Patent-pending approach",
-      "Live intent signals",
-      "Automated routing",
+      "Built in PHP from the ground up",
+      "Used in over 120 countries",
+      "Co-founded with outreach-led growth",
     ],
-    services: ["Platform architecture", "Workflow automation", "Realtime notifications"],
-  },
-  {
-    slug: "single-cards",
-    name: "Single.Cards",
-    shortName: "Single",
-    category: "Marketplace",
-    tagline:
-      "A trading card marketplace with AI card scanning, Stripe payments, and robust database management.",
-    summary:
-      "From listing flow to checkout, we delivered a polished marketplace that balances collector-grade detail with fast transaction performance.",
-    gradient: "from-rose-200 via-orange-100 to-amber-200",
-    accent: "bg-rose-600",
-    accentColor: "#f43f5e",
-    laptopTitle: "Marketplace operations view",
-    phoneTitle: "AI scan + list flow",
-    logo: {
-      text: "Single.Cards",
-      src: "",
-      alt: "Single.Cards logo",
-    },
-    highlights: ["AI card recognition", "Stripe integration", "Seller inventory tooling"],
-    services: ["E-commerce build", "Payment integration", "Data modeling"],
+    services: ["Product build", "PHP engineering", "Founder-led outreach"],
   },
   {
     slug: "rocup",
     name: "Rocup",
     shortName: "Rocup",
-    category: "Community Commerce",
+    category: ["Community Commerce", "App", "Web", "CRM"],
     tagline:
-      "Community commerce with shop check-in, rewards, leaderboards, and Shopify and CRM integrations.",
+      "Complete system link community & commerce with shop check-in, rewards, leaderboards, and Shopify and CRM integrations.",
     summary:
-      "We connected engagement mechanics and commerce systems into one playful platform that drives repeat participation and measurable retention.",
+      "We connected engagement mechanics and commerce systems into one complete platform that drives repeat participation and measurable retention.",
     gradient: "from-zinc-200 via-stone-100 to-orange-100",
     accent: "bg-zinc-900",
     accentColor: "#18181b",
@@ -142,10 +120,32 @@ export const projects = [
     services: ["Platform UX", "Integration engineering", "Growth loops"],
   },
   {
+    slug: "single-cards",
+    name: "Single.Cards",
+    shortName: "Single",
+    category: ["E-commerce", "Marketplace", "AI", "Stripe"],
+    tagline:
+      "A trading card marketplace with AI card scanning, Stripe payments, and robust database management.",
+    summary:
+      "From listing flow to checkout, we delivered a polished marketplace that balances collector-grade detail with fast transaction performance.",
+    gradient: "from-rose-200 via-orange-100 to-amber-200",
+    accent: "bg-rose-600",
+    accentColor: "#f43f5e",
+    laptopTitle: "Marketplace operations view",
+    phoneTitle: "AI scan + list flow",
+    logo: {
+      text: "Single.Cards",
+      src: "",
+      alt: "Single.Cards logo",
+    },
+    highlights: ["AI card recognition", "Stripe integration", "Seller inventory tooling"],
+    services: ["E-commerce build", "Payment integration", "Data modeling"],
+  },
+  {
     slug: "shrink-my-house",
     name: "Shrink my House",
     shortName: "Shrink",
-    category: "Service Website",
+    category: ["Service Business", "Web", "CRM", "Automation"],
     tagline:
       "A conversion-focused service site with CRM integration, automation, and 5-star review outcomes.",
     summary:
@@ -166,6 +166,32 @@ export const projects = [
       "5-star review support",
     ],
     services: ["Web build", "CRM integration", "Funnel optimization"],
+  },
+    {
+    slug: "property-codes",
+    name: "Property.Codes",
+    shortName: "Property",
+    category: ["PropTech", "Web", "CRM", "Automation"],
+    tagline:
+      "A patent-pending hot lead generator for estate agents with real-time notifications.",
+    summary:
+      "We built a lead-intent pipeline that captures buyer signals, scores urgency, and alerts sales teams instantly so high-intent prospects are reached first.",
+    gradient: "from-lime-200 via-emerald-100 to-teal-200",
+    accent: "bg-emerald-600",
+    accentColor: "#10b981",
+    laptopTitle: "Lead signal intelligence",
+    phoneTitle: "Agent alert stream",
+    logo: {
+      text: "Property.Codes",
+      src: "",
+      alt: "Property.Codes logo",
+    },
+    highlights: [
+      "Buyer intent capture",
+      "Live intent signals",
+      "Automated routing",
+    ],
+    services: ["Platform architecture", "Workflow automation", "Realtime notifications"],
   },
 ];
 
@@ -233,7 +259,7 @@ export const whyJiti = [
 ];
 
 export const socialProof = {
-  totalReviews: 9,
+  totalReviews: 10,
   rating: 5,
   headline: "Client feedback from real projects delivered by our team.",
 };
@@ -249,15 +275,15 @@ export const testimonials = [
   },
   {
     quote:
-      "Great designer who matched my expectations, very efficient and professional.",
-    author: "Leon",
-    company: "Legacy 1 Fitness",
-  },
-  {
-    quote:
       "Surpassed my expectations with attention to detail and produced a fantastic logo.",
     author: "Dee Banks",
     company: "China Unboxed",
+  },
+    {
+    quote:
+      "Great designer who matched my expectations, very efficient and professional.",
+    author: "Leon",
+    company: "Legacy 1 Fitness",
   },
   {
     quote:
