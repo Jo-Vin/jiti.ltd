@@ -15,19 +15,28 @@ import { projects } from "@/data/siteData";
 
 function ProjectIcon({ project, className = "" }) {
   const hasImage = Boolean(project.logo?.src);
+  const logoChipClass = project.logo?.chipClass || "border-zinc-900/8 bg-white/88";
+  const logoImageClass = project.logo?.imageClass || "h-full w-full object-contain";
+  const isWideLogo = project.logo?.layout === "wide";
+  const logoChipSizeClass = isWideLogo
+    ? "h-12 w-[6.4rem] rounded-2xl px-2"
+    : "h-12 w-12 rounded-2xl";
+  const logoImageSize = isWideLogo
+    ? { width: 84, height: 28 }
+    : { width: 40, height: 40 };
 
   if (hasImage) {
     return (
       <div
-        className={`mb-4 flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-zinc-900/8 bg-white/88 p-1.5 shadow-sm ${className}`}
+        className={`mb-4 flex items-center justify-center overflow-hidden border p-1.5 shadow-sm ${logoChipSizeClass} ${logoChipClass} ${className}`}
       >
         {/* TODO: Replace logo.src with final brand assets in /public when available. */}
         <Image
           src={project.logo.src}
           alt={project.logo.alt || `${project.name} logo`}
-          width={40}
-          height={40}
-          className="h-full w-full object-contain"
+          width={logoImageSize.width}
+          height={logoImageSize.height}
+          className={logoImageClass}
         />
       </div>
     );
@@ -81,6 +90,270 @@ function getCategoryTags(category) {
   return [];
 }
 
+function getMobileShowcaseImages(showcase = {}) {
+  const explicitImages = Array.isArray(showcase.mobileShowcaseImages)
+    ? showcase.mobileShowcaseImages
+    : [];
+  const fallbackImages = [showcase.mobileImage];
+  if (!showcase.mobileImage && showcase.desktopImage) {
+    fallbackImages.push(showcase.desktopImage);
+  }
+  const images = explicitImages.length ? explicitImages : fallbackImages;
+
+  return Array.from(new Set(images.filter(Boolean))).slice(0, 3);
+}
+
+function getMobileShowcaseOptions(project, variant = "mobile") {
+  const fit = project.showcase?.mobileImageFit || project.showcase?.imageFit || "contain";
+  const noFrame = Boolean(project.showcase?.mobileNoFrame);
+  const radiusValue = Number(project.showcase?.mobileImageRadius);
+  const showcase = project.showcase || {};
+  const mobileImages = getMobileShowcaseImages(showcase);
+  const explicitPortraitImages = Array.isArray(showcase.mobilePortraitImages)
+    ? showcase.mobilePortraitImages.filter(Boolean)
+    : [];
+  const isDesktopVariant = variant === "desktop";
+
+  let filteredMobileImages = mobileImages;
+  if (explicitPortraitImages.length) {
+    filteredMobileImages = explicitPortraitImages;
+  } else if (!isDesktopVariant) {
+    const nonDesktopImages = mobileImages.filter(
+      (imageSrc) => imageSrc !== showcase.desktopImage,
+    );
+    filteredMobileImages = nonDesktopImages.length ? nonDesktopImages : mobileImages;
+  }
+
+  return {
+    mobileImage:
+      filteredMobileImages[0] ||
+      showcase.mobileImage ||
+      showcase.desktopImage,
+    mobileImages: filteredMobileImages,
+    mobileFitClass: fit === "cover" ? "object-cover" : "object-contain",
+    mobilePaddingClass:
+      fit === "cover" ? "" : noFrame ? "p-0.5 sm:p-1" : "p-1.5 sm:p-2",
+    mobileNoFrame: noFrame,
+    mobileRadius:
+      Number.isFinite(radiusValue) && radiusValue > 0 ? radiusValue : null,
+  };
+}
+
+function NoFrameMobileGallery({
+  project,
+  images,
+  mobileFitClass,
+  mobilePaddingClass,
+  mobileRadius,
+  variant = "mobile",
+}) {
+  const railRef = useRef(null);
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const isDesktop = variant === "desktop";
+  const showDesktopCarousel = isDesktop && images.length > 1;
+  const imageCornerRadius = mobileRadius ?? 5;
+  const showTwoUpMobile = !isDesktop && images.length === 2;
+  const showRail = !isDesktop && images.length > 2;
+  const showSingle = !showRail && !showTwoUpMobile && !showDesktopCarousel;
+  const autoSlideEnabled = showRail || showDesktopCarousel;
+  const fallbackRatio = isDesktop ? 1 : 0.62;
+  const [imageRatios, setImageRatios] = useState({});
+  const frameHeightClass = isDesktop
+    ? "h-[28rem] md:h-[32rem] xl:h-[36rem]"
+    : "h-[22rem] sm:h-[24.5rem]";
+  const galleryMaxWidthClass = isDesktop
+    ? "w-full max-w-none"
+    : showSingle
+      ? "w-[min(100%,16.4rem)] sm:w-[min(100%,18.6rem)]"
+      : "w-full max-w-[26rem] sm:max-w-[30rem]";
+
+  useEffect(() => {
+    if (!autoSlideEnabled) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveSlideIndex((current) => (current + 1) % images.length);
+    }, isDesktop ? 2600 : 2400);
+
+    return () => window.clearInterval(timer);
+  }, [autoSlideEnabled, images.length, isDesktop]);
+
+  useEffect(() => {
+    if (!showRail || !railRef.current) {
+      return;
+    }
+
+    const rail = railRef.current;
+    const cards = rail.querySelectorAll("[data-mobile-gallery-card]");
+    const nextCard = cards[activeSlideIndex];
+    if (!nextCard) {
+      return;
+    }
+
+    rail.scrollTo({ left: nextCard.offsetLeft, behavior: "smooth" });
+  }, [activeSlideIndex, showRail]);
+
+  const handleImageLoad = (index, event) => {
+    const target = event.target;
+    const naturalWidth = target?.naturalWidth;
+    const naturalHeight = target?.naturalHeight;
+    if (!naturalWidth || !naturalHeight) {
+      return;
+    }
+
+    const ratio = naturalWidth / naturalHeight;
+    const ratioMin = isDesktop ? 0.45 : 0.42;
+    const ratioMax = isDesktop ? 2.2 : 1.5;
+    const clampedRatio = Math.max(ratioMin, Math.min(ratio, ratioMax));
+    setImageRatios((current) => {
+      if (current[index] === clampedRatio) {
+        return current;
+      }
+
+      return {
+        ...current,
+        [index]: clampedRatio,
+      };
+    });
+  };
+
+  const getRatio = (index) => imageRatios[index] || fallbackRatio;
+  const getMobileRailWidth = (ratio) => {
+    const widthPercent = Math.max(36, Math.min(56, ratio * 46));
+    return `${widthPercent}%`;
+  };
+  const getDesktopRailWidth = (ratio) => {
+    const widthPercent = Math.max(42, Math.min(92, ratio * 48));
+    return `${widthPercent}%`;
+  };
+  const getDesktopSingleWidth = (ratio) => {
+    const widthRem = Math.max(22, Math.min(38, ratio * 32));
+    return `${widthRem}rem`;
+  };
+  const slideSurfaceClass = isDesktop ? "bg-white/30" : "bg-transparent";
+
+  if (!images.length) {
+    return null;
+  }
+
+  return (
+    <div className={`mx-auto min-w-0 ${galleryMaxWidthClass}`}>
+      {showDesktopCarousel ? (
+        <div className="flex h-full flex-col items-center justify-center gap-2">
+          <div
+            className={`relative ${frameHeightClass}`}
+            style={{
+              width: getDesktopSingleWidth(getRatio(activeSlideIndex)),
+              maxWidth: "100%",
+            }}
+          >
+            <div
+              className={`relative h-full w-full overflow-hidden ${slideSurfaceClass}`}
+              style={{ borderRadius: `${imageCornerRadius}px` }}
+            >
+              <Image
+                src={images[activeSlideIndex]}
+                alt={`${project.name} mobile showcase ${activeSlideIndex + 1}`}
+                fill
+                sizes="(min-width: 1024px) 28rem, 80vw"
+                onLoad={(event) => handleImageLoad(activeSlideIndex, event)}
+                className={`${mobileFitClass} ${mobilePaddingClass}`}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {images.map((_, index) => (
+              <span
+                key={`${project.slug}-desktop-dot-${index}`}
+                className={`h-1.5 rounded-full transition-all ${
+                  index === activeSlideIndex
+                    ? "w-5 bg-zinc-800/70"
+                    : "w-1.5 bg-zinc-500/35"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      ) : showSingle ? (
+        <div className={`relative ${isDesktop ? "mx-auto" : "w-full"} ${frameHeightClass}`}
+          style={isDesktop ? { width: getDesktopSingleWidth(getRatio(0)), maxWidth: "100%" } : undefined}
+        >
+          <div
+            className={`relative h-full w-full overflow-hidden ${slideSurfaceClass}`}
+            style={{ borderRadius: `${imageCornerRadius}px` }}
+          >
+            <Image
+              src={images[0]}
+              alt={`${project.name} mobile showcase`}
+              fill
+              sizes={isDesktop ? "(min-width: 1024px) 28rem, 80vw" : "(min-width: 640px) 18.6rem, 16.4rem"}
+              onLoad={(event) => handleImageLoad(0, event)}
+              className={`${mobileFitClass} ${mobilePaddingClass}`}
+            />
+          </div>
+        </div>
+      ) : showTwoUpMobile ? (
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+          {images.map((imageSrc, index) => (
+            <div
+              key={`${project.slug}-mobile-showcase-${index}`}
+              className={`relative w-full overflow-hidden ${slideSurfaceClass}`}
+              style={{
+                borderRadius: `${imageCornerRadius}px`,
+                aspectRatio: getRatio(index),
+              }}
+            >
+              <Image
+                src={imageSrc}
+                alt={`${project.name} mobile showcase ${index + 1}`}
+                fill
+                sizes="(min-width: 640px) 14rem, 46vw"
+                onLoad={(event) => handleImageLoad(index, event)}
+                className={`${mobileFitClass} ${mobilePaddingClass}`}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div
+          ref={railRef}
+          className={`flex overflow-x-hidden ${isDesktop ? "items-center gap-4" : "gap-2.5 sm:gap-3"}`}
+        >
+          {images.map((imageSrc, index) => (
+            <div
+              key={`${project.slug}-mobile-showcase-${index}`}
+              data-mobile-gallery-card
+              className={`relative shrink-0 overflow-hidden ${slideSurfaceClass} ${
+                isDesktop
+                  ? frameHeightClass
+                  : "h-[22rem] sm:h-[24.5rem]"
+              }`}
+              style={{
+                borderRadius: `${imageCornerRadius}px`,
+                aspectRatio: getRatio(index),
+                width: isDesktop
+                  ? getDesktopRailWidth(getRatio(index))
+                  : getMobileRailWidth(getRatio(index)),
+              }}
+            >
+              <Image
+                src={imageSrc}
+                alt={`${project.name} mobile showcase ${index + 1}`}
+                fill
+                sizes={isDesktop ? "(min-width: 1024px) 18rem, 44vw" : "(min-width: 640px) 11rem, 45vw"}
+                onLoad={(event) => handleImageLoad(index, event)}
+                className={`${mobileFitClass} ${mobilePaddingClass}`}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TechStackSection({ stack = [], className = "" }) {
   if (!stack.length) {
     return null;
@@ -114,11 +387,11 @@ function GuidesJourneyCanvas({ project, compact = false }) {
     (compact ? project.showcase?.mobileImage : project.showcase?.desktopImage) ||
     project.showcase?.desktopImage ||
     project.showcase?.mobileImage ||
-    "/Guides.app_Showcase.webp";
+    "/clients/Guides.app_Showcase.webp";
   const imageFit = compact
     ? project.showcase?.mobileImageFit ||
       project.showcase?.imageFit ||
-      "cover"
+      "contain"
     : project.showcase?.desktopImageFit ||
       project.showcase?.imageFit ||
       "contain";
@@ -152,6 +425,13 @@ function GuidesJourneyCanvas({ project, compact = false }) {
 }
 
 function GuidesDesktopPanels({ project }) {
+  const {
+    mobileImages,
+    mobileFitClass,
+    mobilePaddingClass,
+    mobileRadius,
+  } = getMobileShowcaseOptions(project, "desktop");
+
   return (
     <div className="mt-5 grid h-[calc(100%-2.5rem)] min-h-0 grid-cols-[1.14fr_0.86fr] gap-4">
       <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-4 rounded-[1.3rem] border border-[#e6d8b5] bg-[#fffaf0] p-5">
@@ -168,7 +448,18 @@ function GuidesDesktopPanels({ project }) {
         </div>
 
         <div className="min-h-0 overflow-hidden">
-          <GuidesJourneyCanvas project={project} />
+          {mobileImages.length ? (
+            <NoFrameMobileGallery
+              project={project}
+              images={mobileImages}
+              mobileFitClass={mobileFitClass}
+              mobilePaddingClass={mobilePaddingClass}
+              mobileRadius={mobileRadius}
+              variant="desktop"
+            />
+          ) : (
+            <GuidesJourneyCanvas project={project} />
+          )}
         </div>
       </div>
 
@@ -255,32 +546,58 @@ function GuidesDesktopPanels({ project }) {
 }
 
 function DefaultDesktopPanels({ project }) {
+  const {
+    mobileImages,
+    mobileFitClass,
+    mobilePaddingClass,
+    mobileRadius,
+  } = getMobileShowcaseOptions(project, "desktop");
+
   return (
-    <div className="mt-5 grid h-[calc(100%-2.5rem)] grid-cols-[1.14fr_0.86fr] gap-4">
-      <div className="rounded-[1.3rem] bg-white/78 p-5">
-        <ProjectIcon project={project} />
-        <h3 className="max-w-xl text-4xl font-bold text-zinc-900">{project.laptopTitle}</h3>
-        <div className="mt-5 space-y-3">
-          {/* TODO: Replace this desktop panel with a real project screenshot. */}
-          <div className="h-16 rounded-2xl bg-white/82" />
-          <div className="grid grid-cols-3 gap-3">
-            <div className="h-12 rounded-xl bg-white/66" />
-            <div className="h-12 rounded-xl bg-white/56" />
-            <div className="h-12 rounded-xl bg-white/66" />
+    <div className="mt-5 grid h-[calc(100%-2.5rem)] min-h-0 grid-cols-[1.14fr_0.86fr] gap-4">
+      <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] rounded-[1.3rem] bg-white/78 p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <ProjectIcon project={project} className="mb-3" />
+            <h3 className="max-w-xl text-4xl font-bold text-zinc-900">{project.laptopTitle}</h3>
           </div>
-          <div className="h-24 rounded-2xl bg-black/10" />
+          <span className="rounded-full border border-zinc-900/12 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+            Desktop showcase
+          </span>
+        </div>
+
+        <div className="mt-4 min-h-0 overflow-hidden rounded-2xl border border-zinc-900/10 bg-white/82 p-3 sm:p-4">
+          {mobileImages.length ? (
+            <NoFrameMobileGallery
+              project={project}
+              images={mobileImages}
+              mobileFitClass={mobileFitClass}
+              mobilePaddingClass={mobilePaddingClass}
+              mobileRadius={mobileRadius}
+              variant="desktop"
+            />
+          ) : (
+            <div className="h-full w-full bg-white/70" />
+          )}
         </div>
       </div>
 
-      <div className="rounded-[1.3rem] bg-white/68 p-4">
+      <div className="grid min-h-0 grid-rows-[auto_auto_minmax(0,1fr)] rounded-[1.3rem] bg-white/68 p-4">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-700/70">
-          Supporting panel
+          Project context
         </p>
-        <div className="mt-3 space-y-3">
-          <div className="h-20 rounded-2xl bg-white/72" />
-          <div className="h-10 rounded-xl bg-white/62" />
-          <div className="h-10 rounded-xl bg-white/58" />
-          <div className="h-20 rounded-2xl bg-black/12" />
+        <p className="mt-2 text-sm leading-6 text-zinc-700">
+          {project.tagline || project.summary}
+        </p>
+        <div className="mt-4 grid content-start gap-2">
+          {project.highlights?.slice(0, 4).map((highlight) => (
+            <div
+              key={`${project.slug}-desktop-highlight-${highlight}`}
+              className="rounded-xl border border-zinc-900/10 bg-white/76 px-3 py-2 text-sm font-medium text-zinc-800"
+            >
+              {highlight}
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -288,12 +605,31 @@ function DefaultDesktopPanels({ project }) {
 }
 
 function GuidesMobilePhone({ project }) {
-  return (
-    <div className="mx-auto w-[min(100%,12.6rem)] min-w-0 rounded-[2.2rem] border-[7px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)] sm:w-[min(100%,15rem)] sm:border-[8px]">
-      <div className="rounded-[1.7rem] bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152] p-2.5">
-        <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
+  const {
+    mobileImage,
+    mobileImages,
+    mobileFitClass,
+    mobilePaddingClass,
+    mobileNoFrame,
+    mobileRadius,
+  } = getMobileShowcaseOptions(project, "mobile");
 
-        <div className="mt-2.5 h-[18.8rem] overflow-hidden sm:h-[21.8rem]">
+  if (mobileImages.length && mobileNoFrame) {
+    return (
+      <NoFrameMobileGallery
+        project={project}
+        images={mobileImages}
+        mobileFitClass={mobileFitClass}
+        mobilePaddingClass={mobilePaddingClass}
+        mobileRadius={mobileRadius}
+      />
+    );
+  }
+
+  return (
+    <div className="mx-auto w-[min(100%,13.5rem)] min-w-0 sm:w-[min(100%,15.6rem)]">
+      <div className="rounded-[1.9rem] border border-white/60 bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152] p-2.5 shadow-[0_18px_42px_rgba(0,0,0,0.22)]">
+        <div className="h-[18.8rem] overflow-hidden rounded-[1.35rem] border border-white/65 bg-white/72 sm:h-[21.8rem]">
           <GuidesJourneyCanvas project={project} compact />
         </div>
       </div>
@@ -302,10 +638,50 @@ function GuidesMobilePhone({ project }) {
 }
 
 function DefaultMobilePhone({ project }) {
+  const {
+    mobileImage,
+    mobileImages,
+    mobileFitClass,
+    mobilePaddingClass,
+    mobileNoFrame,
+    mobileRadius,
+  } = getMobileShowcaseOptions(project, "mobile");
+
+  if (mobileImage) {
+    if (mobileNoFrame && mobileImages.length) {
+      return (
+        <NoFrameMobileGallery
+          project={project}
+          images={mobileImages}
+          mobileFitClass={mobileFitClass}
+          mobilePaddingClass={mobilePaddingClass}
+          mobileRadius={mobileRadius}
+        />
+      );
+    }
+
+    return (
+      <div className="mx-auto w-[min(100%,13.5rem)] min-w-0 sm:w-[min(100%,15.6rem)]">
+        <div className={`rounded-[1.9rem] border border-white/60 bg-gradient-to-br p-2.5 shadow-[0_18px_42px_rgba(0,0,0,0.22)] ${project.gradient}`}>
+          <div className="h-[18.8rem] overflow-hidden rounded-[1.35rem] border border-white/65 bg-white/78 sm:h-[21.8rem]">
+            <div className="relative h-full w-full">
+              <Image
+                src={mobileImage}
+                alt={`${project.name} mobile showcase`}
+                fill
+                sizes="(min-width: 640px) 15rem, 12.6rem"
+                className={`${mobileFitClass} ${mobilePaddingClass}`}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="mx-auto w-[min(100%,12.6rem)] min-w-0 rounded-[2.2rem] border-[7px] border-[#101114] bg-[#101114] shadow-[0_18px_42px_rgba(0,0,0,0.32)] sm:w-[min(100%,15rem)] sm:border-[8px]">
-      <div className={`rounded-[1.7rem] bg-gradient-to-br p-4 ${project.gradient}`}>
-        <div className="mx-auto h-1 w-12 rounded-full bg-black/28" />
+    <div className="mx-auto w-[min(100%,13.5rem)] min-w-0 sm:w-[min(100%,15.6rem)]">
+      <div className={`rounded-[1.9rem] border border-white/60 bg-gradient-to-br p-4 shadow-[0_18px_42px_rgba(0,0,0,0.22)] ${project.gradient}`}>
         <p className="mt-4 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-zinc-800/72">
           Mobile preview
         </p>
@@ -420,6 +796,15 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
   const activeProject = projects[activeIndex];
   const activeCategoryTags = getCategoryTags(activeProject.category);
   const hasActiveLogo = Boolean(activeProject.logo?.src);
+  const activeLogoIsWide = activeProject.logo?.layout === "wide";
+  const activeLogoChipClass = activeProject.logo?.chipClass || "border-zinc-900/10 bg-white/88";
+  const activeLogoImageClass = activeProject.logo?.imageClass || "h-full w-full object-contain";
+  const activeLogoContainerSizeClass = activeLogoIsWide
+    ? "h-12 w-[6rem] rounded-2xl px-2"
+    : "h-12 w-12 rounded-2xl";
+  const activeLogoImageSize = activeLogoIsWide
+    ? { width: 80, height: 26 }
+    : { width: 38, height: 38 };
   const isFinalProject = activeIndex === projects.length - 1;
   const isGuidesActive = activeProject.slug === "guides-app";
   const mobileWheelProjects = projects.map((_, offset) => {
@@ -715,26 +1100,32 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
                   <div className="relative mt-2 min-w-0">
                     <h3
                       className={`min-w-0 break-words text-[1.78rem] leading-[1.03] font-bold text-zinc-950 sm:text-4xl ${
-                        hasActiveLogo ? "pr-15" : ""
+                        hasActiveLogo
+                          ? activeLogoIsWide
+                            ? "pr-[7rem]"
+                            : "pr-15"
+                          : ""
                       }`}
                     >
                       {activeProject.name}
                     </h3>
                     {hasActiveLogo ? (
-                      <div className="absolute right-0 top-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-zinc-900/10 bg-white/88 p-1.5 shadow-sm">
+                      <div
+                        className={`absolute -top-4 right-0 flex shrink-0 items-center justify-center border p-1.5 shadow-sm ${activeLogoContainerSizeClass} ${activeLogoChipClass}`}
+                      >
                         <Image
                           src={activeProject.logo.src}
                           alt={activeProject.logo.alt || `${activeProject.name} logo`}
-                          width={38}
-                          height={38}
-                          className="h-full w-full object-contain"
+                          width={activeLogoImageSize.width}
+                          height={activeLogoImageSize.height}
+                          className={activeLogoImageClass}
                         />
                       </div>
                     ) : null}
                   </div>
 
                   {activeCategoryTags.length ? (
-                    <div className="mt-2 flex flex-wrap gap-1.5">
+                    <div className={`flex flex-wrap gap-1.5 ${hasActiveLogo ? "mt-3.5" : "mt-2"}`}>
                       {activeCategoryTags.map((categoryTag) => (
                         <span
                           key={`${activeProject.slug}-details-tag-${categoryTag}`}
