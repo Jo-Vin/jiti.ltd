@@ -2,12 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Mail, MessageCircle, X } from "lucide-react";
+import { ChevronUp, Mail, MessageCircle, X } from "lucide-react";
 import { contact } from "@/data/siteData";
 
 export default function FloatingContact({ visible = true }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
     const handleEscape = (event) => {
@@ -78,17 +82,26 @@ export default function FloatingContact({ visible = true }) {
             </motion.div>
           ) : null}
         </AnimatePresence>
-
-        <button
-          type="button"
-          onClick={() => setOpen((current) => !current)}
-          className="inline-flex h-11 items-center gap-2 rounded-full border border-[#d7cab8] bg-white/95 px-4 text-xs font-semibold text-zinc-900 shadow-[0_14px_35px_rgba(85,58,17,0.2)] backdrop-blur-xl transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 sm:h-12 sm:text-sm"
-          aria-expanded={open}
-          aria-label="Open contact options"
-        >
-          {open ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
-          <span>Contact us</span>
-        </button>
+        <div className="flex flex-col items-end gap-2">
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d7cab8] bg-white/95 text-zinc-900 shadow-[0_12px_28px_rgba(85,58,17,0.2)] backdrop-blur-xl transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70"
+            aria-label="Scroll to top"
+          >
+            <ChevronUp className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpen((current) => !current)}
+            className="inline-flex h-11 items-center gap-2 rounded-full border border-[#d7cab8] bg-white/95 px-4 text-xs font-semibold text-zinc-900 shadow-[0_14px_35px_rgba(85,58,17,0.2)] backdrop-blur-xl transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 sm:h-12 sm:text-sm"
+            aria-expanded={open}
+            aria-label="Open contact options"
+          >
+            {open ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
+            <span>Contact us</span>
+          </button>
+        </div>
       </div>
     </div>
   );

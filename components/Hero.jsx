@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, MousePointer2, Star } from "lucide-react";
+import { ArrowDown, ArrowUpRight, MousePointer2, Star } from "lucide-react";
 import { contact, socialProof } from "@/data/siteData";
 
 const PORTFOLIO_COUNTDOWN_SECONDS = 30;
@@ -89,12 +89,28 @@ export default function Hero({ onViewPortfolio, countdownActive = false }) {
           </p>
 
           <div className="mt-8 max-w-xl space-y-3">
+                        <div className="relative inline-flex w-full sm:w-auto">
+              <span
+                className="pointer-events-none absolute inset-x-6 -inset-y-4 -z-10 rounded-full bg-[radial-gradient(circle,_rgba(24,24,27,0.34)_0%,_rgba(24,24,27,0.16)_45%,_rgba(24,24,27,0)_78%)] blur-xl"
+                aria-hidden="true"
+              />
+              <button
+                type="button"
+                onClick={startPortfolioJourney}
+                className="group inline-flex w-full items-center justify-center rounded-full border border-zinc-900 bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500/70 sm:w-auto"
+              >
+                {countdownActive
+                  ? `View Portfolio (${portfolioCountdown})`
+                  : "View Portfolio"}
+                <ArrowDown className="ml-2 h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+              </button>
+            </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <a
                 href={contact.instagramLink}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
+                className="inline-flex items-center justify-center rounded-full border border-zinc-900/15 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70"
               >
                 DM on Instagram
                 <ArrowUpRight className="ml-2 h-4 w-4" />
@@ -106,15 +122,6 @@ export default function Hero({ onViewPortfolio, countdownActive = false }) {
                 Email us
               </a>
             </div>
-
-            <button
-              type="button"
-              onClick={startPortfolioJourney}
-              className="inline-flex w-full items-center justify-center rounded-full border border-zinc-900/14 bg-white/88 px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/70 sm:w-auto"
-            >
-              {countdownActive ? `View Portfolio (${portfolioCountdown})` : "View Portfolio"}
-              <ArrowUpRight className="ml-2 h-4 w-4" />
-            </button>
           </div>
         </motion.div>
       </div>
