@@ -45,7 +45,9 @@ function ProjectIcon({ project, className = "" }) {
   return <div className={`mb-4 h-12 w-12 rounded-2xl ${project.accent} ${className}`} />;
 }
 
-function ProgressRail({ activeIndex, onSelect }) {
+function ProgressRail({ activeIndex, activeColor, onSelect }) {
+  const resolvedActiveColor = activeColor || "#18181b";
+
   return (
     <div className="absolute -left-11 top-1/2 z-20 hidden h-[64vh] -translate-y-1/2 lg:flex">
       <div className="flex h-full flex-col gap-2 rounded-full border border-[#d6cab8] bg-white/78 p-1.5 shadow-sm backdrop-blur-sm">
@@ -59,10 +61,17 @@ function ProgressRail({ activeIndex, onSelect }) {
             aria-pressed={index === activeIndex}
           >
             <span
-              className={`block h-full w-full rounded-full transition ${
-                index === activeIndex ? "opacity-100" : "opacity-35 group-hover:opacity-65"
+              className={`block h-full w-full rounded-full transition-all duration-300 ${
+                index === activeIndex
+                  ? "scale-100 opacity-100"
+                  : "scale-[0.92] opacity-40 group-hover:scale-[0.96] group-hover:opacity-65"
               }`}
-              style={{ backgroundColor: project.accentColor || "#18181b" }}
+              style={{
+                backgroundColor:
+                  index === activeIndex
+                    ? resolvedActiveColor
+                    : project.accentColor || "#b8b0a4",
+              }}
             />
           </button>
         ))}
@@ -157,6 +166,7 @@ function NoFrameMobileGallery({
   const showSingle = !showRail && !showTwoUpMobile && !showDesktopCarousel;
   const autoSlideEnabled = showRail || showDesktopCarousel;
   const fallbackRatio = isDesktop ? 1 : 0.62;
+  const accentColor = project.accentColor || "#18181b";
   const [imageRatios, setImageRatios] = useState({});
   const frameHeightClass = isDesktop
     ? "h-[28rem] md:h-[32rem] xl:h-[36rem]"
@@ -252,26 +262,40 @@ function NoFrameMobileGallery({
               className={`relative h-full w-full overflow-hidden ${slideSurfaceClass}`}
               style={{ borderRadius: `${imageCornerRadius}px` }}
             >
-              <Image
-                src={images[activeSlideIndex]}
-                alt={`${project.name} mobile showcase ${activeSlideIndex + 1}`}
-                fill
-                sizes="(min-width: 1024px) 28rem, 80vw"
-                onLoad={(event) => handleImageLoad(activeSlideIndex, event)}
-                className={`${mobileFitClass} ${mobilePaddingClass}`}
-              />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${project.slug}-desktop-slide-${activeSlideIndex}`}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0, scale: 0.987, filter: "blur(12px)" }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 1.012, filter: "blur(12px)" }}
+                  transition={{ duration: 0.56, ease: "easeInOut" }}
+                >
+                  <Image
+                    src={images[activeSlideIndex]}
+                    alt={`${project.name} showcase ${activeSlideIndex + 1}`}
+                    fill
+                    sizes="(min-width: 1024px) 28rem, 80vw"
+                    onLoad={(event) => handleImageLoad(activeSlideIndex, event)}
+                    className={`${mobileFitClass} ${mobilePaddingClass}`}
+                  />
+                </motion.div>
+              </AnimatePresence>
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0)_58%)]" />
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             {images.map((_, index) => (
-              <span
+              <button
                 key={`${project.slug}-desktop-dot-${index}`}
-                className={`h-1.5 rounded-full transition-all ${
-                  index === activeSlideIndex
-                    ? "w-5 bg-zinc-800/70"
-                    : "w-1.5 bg-zinc-500/35"
+                type="button"
+                aria-label={`View showcase image ${index + 1}`}
+                onClick={() => setActiveSlideIndex(index)}
+                className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                  index === activeSlideIndex ? "scale-110 opacity-100" : "opacity-30 hover:opacity-65"
                 }`}
+                style={{ backgroundColor: accentColor }}
               />
             ))}
           </div>
@@ -443,7 +467,7 @@ function GuidesDesktopPanels({ project }) {
             </p>
           </div>
           <span className="rounded-full border border-[#dcc886] bg-white px-3 py-1 text-xs font-semibold text-[#5f4f20]">
-            Web + iOS + Android
+            Showcase
           </span>
         </div>
 
@@ -526,11 +550,6 @@ function GuidesDesktopPanels({ project }) {
             ))}
           </div>
 
-          <TechStackSection
-            stack={project.techStack}
-            className="rounded-xl border border-zinc-900/8 bg-white/88 px-3 py-2"
-          />
-
           <div className="rounded-xl border border-zinc-900/8 bg-white/88 px-3 py-2">
             <p className="text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-zinc-700">
               A Jiti platform
@@ -562,7 +581,7 @@ function DefaultDesktopPanels({ project }) {
             <h3 className="max-w-xl text-4xl font-bold text-zinc-900">{project.laptopTitle}</h3>
           </div>
           <span className="rounded-full border border-zinc-900/12 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
-            Desktop showcase
+            Showcase
           </span>
         </div>
 
@@ -1007,7 +1026,11 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
       <div className="relative">
         <div className="sticky top-0 h-[100dvh]">
           <div className="relative mx-auto h-full max-w-[1600px] px-0 pb-0 pt-0 sm:px-4 sm:pt-3 lg:px-8 lg:pt-4">
-            <ProgressRail activeIndex={activeIndex} onSelect={jumpToProject} />
+            <ProgressRail
+              activeIndex={activeIndex}
+              activeColor={activeProject.accentColor}
+              onSelect={jumpToProject}
+            />
 
             <div className="relative h-full max-w-full overflow-hidden rounded-none border border-[#d9cdbf] bg-[#fffaf3] shadow-[0_22px_70px_rgba(87,60,18,0.15)] sm:rounded-[2.5rem]">
               {!isFinalProject ? (
@@ -1055,18 +1078,9 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
                               <span className="h-3 w-3 rounded-full bg-amber-300" />
                               <span className="h-3 w-3 rounded-full bg-emerald-400" />
                             </div>
-                            {activeCategoryTags.length ? (
-                              <div className="flex flex-wrap justify-end gap-1.5">
-                                {activeCategoryTags.map((categoryTag) => (
-                                  <span
-                                    key={`${activeProject.slug}-desktop-tag-${categoryTag}`}
-                                    className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-zinc-700"
-                                  >
-                                    {categoryTag}
-                                  </span>
-                                ))}
-                              </div>
-                            ) : null}
+                            {/* <span className="rounded-full bg-white/82 px-3 py-1 text-xs font-semibold text-zinc-700">
+                              Showcase
+                            </span> */}
                           </div>
 
                           {isGuidesActive ? (
@@ -1147,7 +1161,10 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
                         key={highlight}
                         className={`min-w-0 items-start gap-2 break-words ${index > 1 ? "hidden sm:flex" : "flex"}`}
                       >
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-amber-400" />
+                        <span
+                          className="mt-1.5 h-1.5 w-1.5 rounded-full"
+                          style={{ backgroundColor: activeProject.accentColor || "#f59e0b" }}
+                        />
                         {highlight}
                       </li>
                     ))}

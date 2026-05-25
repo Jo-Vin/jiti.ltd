@@ -15,6 +15,49 @@ export const contact = {
 };
 
 export const projects = [
+    {
+    slug: "rocup",
+    name: "Rocup",
+    shortName: "Rocup",
+    category: ["CTO", "Community", "App", "Web", "CRM"],
+    tagline:
+      "Complete system link community & commerce with shop check-in, rewards, leaderboards, and Shopify and CRM integrations.",
+    summary:
+      "As CTO of Rocup, the growing fitness brand with partnerships with Gymshark, Redbull, Grenade & Wing Stop, we work on the BAU systems & on the technology touch points that connected engagement mechanics and commerce systems into one complete platform that drives repeat participation, measurable retention and drives sales.",
+    gradient: "from-zinc-200 via-stone-100 to-orange-100",
+    accent: "bg-zinc-900",
+    accentColor: "#18181b",
+    laptopTitle: "Partner and reward console",
+    phoneTitle: "Leaderboard + rewards",
+    logo: {
+      text: "Rocup",
+      src: "/clients/Rocup_Logo.png",
+      alt: "Rocup logo",
+      layout: "wide",
+      chipClass: "border-zinc-900/25 bg-zinc-900",
+      imageClass: "h-auto w-full object-contain",
+    },
+    highlights: [
+      "Rocup iOS & Andorid App",
+      "CRM",
+      "Check-in gamification",
+      "Reward economy",
+      "Shopify and CRM sync",
+    ],
+    services: ["Platform UX", "Integration engineering", "Growth loops"],
+    showcase: {
+      desktopImage: "/clients/Rocup_Web_Desktop.png",
+      mobileImage: "/clients/Rocup_App_Mobile.jpeg",
+      mobileShowcaseImages: [
+        "/clients/Rocup_App_Mobile.jpeg",
+      ],
+      mobilePortraitImages: ["/clients/Rocup_App_Mobile.jpeg", "/clients/Rocup_Pace_Calculator.png"],
+      desktopImageFit: "contain",
+      mobileImageFit: "contain",
+      mobileNoFrame: true,
+      mobileImageRadius: 20,
+    },
+  },
   {
     slug: "guides-app",
     name: "Guides.app",
@@ -76,47 +119,6 @@ export const projects = [
         "Interactive maps",
         "Built for exploring",
       ],
-    },
-  },
-  {
-    slug: "rocup",
-    name: "Rocup",
-    shortName: "Rocup",
-    category: ["CTO", "Community", "App", "Web", "CRM"],
-    tagline:
-      "Complete system link community & commerce with shop check-in, rewards, leaderboards, and Shopify and CRM integrations.",
-    summary:
-      "We connected engagement mechanics and commerce systems into one complete platform that drives repeat participation and measurable retention.",
-    gradient: "from-zinc-200 via-stone-100 to-orange-100",
-    accent: "bg-zinc-900",
-    accentColor: "#18181b",
-    laptopTitle: "Partner and reward console",
-    phoneTitle: "Leaderboard + rewards",
-    logo: {
-      text: "Rocup",
-      src: "/clients/Rocup_Logo.png",
-      alt: "Rocup logo",
-      layout: "wide",
-      chipClass: "border-zinc-900/25 bg-zinc-900",
-      imageClass: "h-auto w-full object-contain",
-    },
-    highlights: [
-      "Check-in gamification",
-      "Reward economy",
-      "Shopify and CRM sync",
-    ],
-    services: ["Platform UX", "Integration engineering", "Growth loops"],
-    showcase: {
-      desktopImage: "/clients/Rocup_Web_Desktop.png",
-      mobileImage: "/clients/Rocup_App_Mobile.jpeg",
-      mobileShowcaseImages: [
-        "/clients/Rocup_App_Mobile.jpeg",
-      ],
-      mobilePortraitImages: ["/clients/Rocup_App_Mobile.jpeg", "/clients/Rocup_Pace_Calculator.png"],
-      desktopImageFit: "contain",
-      mobileImageFit: "contain",
-      mobileNoFrame: true,
-      mobileImageRadius: 20,
     },
   },
   {
