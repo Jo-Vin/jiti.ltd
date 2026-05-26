@@ -170,12 +170,12 @@ function NoFrameMobileGallery({
   const [imageRatios, setImageRatios] = useState({});
   const frameHeightClass = isDesktop
     ? "h-[28rem] md:h-[32rem] xl:h-[36rem]"
-    : "h-[22rem] sm:h-[24.5rem]";
+    : "h-[18.25rem] sm:h-[20.5rem]";
   const galleryMaxWidthClass = isDesktop
     ? "w-full max-w-none"
     : showSingle
-      ? "w-[min(100%,16.4rem)] sm:w-[min(100%,18.6rem)]"
-      : "w-full max-w-[26rem] sm:max-w-[30rem]";
+      ? "w-[min(100%,14.8rem)] sm:w-[min(100%,16.8rem)]"
+      : "w-full max-w-[22rem] sm:max-w-[25rem]";
 
   useEffect(() => {
     if (!autoSlideEnabled) {
@@ -248,7 +248,10 @@ function NoFrameMobileGallery({
   }
 
   return (
-    <div className={`mx-auto min-w-0 ${galleryMaxWidthClass}`}>
+    <div
+      className={`mx-auto min-w-0 ${galleryMaxWidthClass}`}
+      style={!isDesktop ? { touchAction: "pan-x" } : undefined}
+    >
       {showDesktopCarousel ? (
         <div className="flex h-full flex-col items-center justify-center gap-2">
           <div
@@ -352,7 +355,7 @@ function NoFrameMobileGallery({
               className={`relative shrink-0 overflow-hidden ${slideSurfaceClass} ${
                 isDesktop
                   ? frameHeightClass
-                  : "h-[22rem] sm:h-[24.5rem]"
+                  : "h-[18.25rem] sm:h-[20.5rem]"
               }`}
               style={{
                 borderRadius: `${imageCornerRadius}px`,
@@ -489,7 +492,10 @@ function GuidesDesktopPanels({ project }) {
 
       <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] rounded-[1.3rem] border border-[#eadfbe] bg-white/78 p-4">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-700/70">
-          Mobile rollout
+          Project highlights
+        </p>
+        <p className="mt-2 text-sm leading-6 text-zinc-700">
+          {project.tagline || project.summary}
         </p>
 
         <div className="mt-3 grid gap-2">
@@ -549,15 +555,6 @@ function GuidesDesktopPanels({ project }) {
               </div>
             ))}
           </div>
-
-          <div className="rounded-xl border border-zinc-900/8 bg-white/88 px-3 py-2">
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-zinc-700">
-              A Jiti platform
-            </p>
-            <p className="mt-1 text-sm text-zinc-700">
-              Experience design, platform engineering, and mobile delivery in one product.
-            </p>
-          </div>
         </div>
       </div>
     </div>
@@ -603,7 +600,7 @@ function DefaultDesktopPanels({ project }) {
 
       <div className="grid min-h-0 grid-rows-[auto_auto_minmax(0,1fr)] rounded-[1.3rem] bg-white/68 p-4">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-700/70">
-          Project context
+          Project highlights
         </p>
         <p className="mt-2 text-sm leading-6 text-zinc-700">
           {project.tagline || project.summary}
@@ -648,7 +645,10 @@ function GuidesMobilePhone({ project }) {
   return (
     <div className="mx-auto w-[min(100%,13.5rem)] min-w-0 sm:w-[min(100%,15.6rem)]">
       <div className="rounded-[1.9rem] border border-white/60 bg-gradient-to-br from-[#fff5d8] via-[#ffe8ab] to-[#ffd152] p-2.5 shadow-[0_18px_42px_rgba(0,0,0,0.22)]">
-        <div className="h-[18.8rem] overflow-hidden rounded-[1.35rem] border border-white/65 bg-white/72 sm:h-[21.8rem]">
+        <div
+          className="h-[16.4rem] overflow-hidden rounded-[1.35rem] border border-white/65 bg-white/72 sm:h-[18.6rem]"
+          style={{ touchAction: "pan-x" }}
+        >
           <GuidesJourneyCanvas project={project} compact />
         </div>
       </div>
@@ -682,7 +682,10 @@ function DefaultMobilePhone({ project }) {
     return (
       <div className="mx-auto w-[min(100%,13.5rem)] min-w-0 sm:w-[min(100%,15.6rem)]">
         <div className={`rounded-[1.9rem] border border-white/60 bg-gradient-to-br p-2.5 shadow-[0_18px_42px_rgba(0,0,0,0.22)] ${project.gradient}`}>
-          <div className="h-[18.8rem] overflow-hidden rounded-[1.35rem] border border-white/65 bg-white/78 sm:h-[21.8rem]">
+          <div
+            className="h-[16.4rem] overflow-hidden rounded-[1.35rem] border border-white/65 bg-white/78 sm:h-[18.6rem]"
+            style={{ touchAction: "pan-x" }}
+          >
             <div className="relative h-full w-full">
               <Image
                 src={mobileImage}
@@ -726,16 +729,8 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
   const showcaseRef = useRef(null);
   const stepRefs = useRef([]);
   const detailsRef = useRef(null);
-  const activeIndexRef = useRef(0);
-  const scrollStepLockedRef = useRef(false);
-  const scrollStepUnlockTimerRef = useRef(null);
-  const touchStartRef = useRef({ x: 0, y: 0 });
   const [activeIndex, setActiveIndex] = useState(0);
   const [dismissedOnboardingHintKey, setDismissedOnboardingHintKey] = useState(0);
-
-  useEffect(() => {
-    activeIndexRef.current = activeIndex;
-  }, [activeIndex]);
 
   useEffect(() => {
     const steps = stepRefs.current.filter(Boolean);
@@ -791,14 +786,6 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
   }, [activeIndex]);
 
   useEffect(() => {
-    return () => {
-      if (scrollStepUnlockTimerRef.current) {
-        window.clearTimeout(scrollStepUnlockTimerRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     if (!onboardingHintKey || onboardingHintKey <= dismissedOnboardingHintKey) {
       return undefined;
     }
@@ -848,111 +835,6 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
     window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   };
 
-  useEffect(() => {
-    const isShowcasePinned = () => {
-      const showcase = showcaseRef.current;
-      if (!showcase) {
-        return false;
-      }
-
-      const bounds = showcase.getBoundingClientRect();
-      return bounds.top <= 0 && bounds.bottom >= window.innerHeight;
-    };
-
-    const queueDirectionalStep = (direction) => {
-      if (scrollStepLockedRef.current) {
-        return true;
-      }
-
-      const currentIndex = activeIndexRef.current;
-      const nextIndex = currentIndex + direction;
-      if (nextIndex < 0 || nextIndex > projects.length - 1) {
-        return false;
-      }
-
-      scrollStepLockedRef.current = true;
-      jumpToProject(nextIndex);
-
-      if (scrollStepUnlockTimerRef.current) {
-        window.clearTimeout(scrollStepUnlockTimerRef.current);
-      }
-
-      scrollStepUnlockTimerRef.current = window.setTimeout(() => {
-        scrollStepLockedRef.current = false;
-      }, 560);
-
-      return true;
-    };
-
-    const handleWheel = (event) => {
-      if (!isShowcasePinned()) {
-        return;
-      }
-
-      if (Math.abs(event.deltaY) < 14) {
-        return;
-      }
-
-      const didQueueStep = queueDirectionalStep(event.deltaY > 0 ? 1 : -1);
-      if (didQueueStep) {
-        event.preventDefault();
-      }
-    };
-
-    const handleTouchStart = (event) => {
-      if (!isShowcasePinned()) {
-        return;
-      }
-
-      const touch = event.touches?.[0];
-      if (!touch) {
-        return;
-      }
-
-      touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-    };
-
-    const handleTouchMove = (event) => {
-      if (!isShowcasePinned()) {
-        return;
-      }
-
-      const touch = event.touches?.[0];
-      if (!touch) {
-        return;
-      }
-
-      const deltaY = touchStartRef.current.y - touch.clientY;
-      const deltaX = touchStartRef.current.x - touch.clientX;
-
-      if (Math.abs(deltaY) < 26 || Math.abs(deltaY) < Math.abs(deltaX)) {
-        return;
-      }
-
-      const didQueueStep = queueDirectionalStep(deltaY > 0 ? 1 : -1);
-      if (didQueueStep) {
-        event.preventDefault();
-        touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-      }
-    };
-
-    const handleTouchEnd = () => {
-      touchStartRef.current = { x: 0, y: 0 };
-    };
-
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
-    window.addEventListener("touchmove", handleTouchMove, { passive: false });
-    window.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
-    };
-  }, []);
-
   const jumpToServices = () => {
     const target = document.getElementById("services");
     if (!target) {
@@ -981,9 +863,6 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
         <p className="inline-flex rounded-full border border-zinc-900/12 bg-white/85 px-3 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-zinc-700 shadow-sm">
           Selected Work
         </p>
-        <h2 className="mt-3 text-2xl leading-tight font-bold text-zinc-950">
-          Scroll to preview each project
-        </h2>
         <AnimatePresence>
           {showOnboardingHint ? (
             <motion.p
@@ -1004,9 +883,8 @@ export default function DeviceShowcase({ onboardingHintKey = 0 }) {
           Selected Work
         </p>
         <h2 className="mt-4 text-4xl font-bold text-zinc-950 sm:text-5xl lg:text-6xl">
-          Browse each product clearly,
-          <br />
-          with brand-led context.
+          We've picked some of our highlights,
+          for you to explore.
         </h2>
         <AnimatePresence>
           {showOnboardingHint ? (

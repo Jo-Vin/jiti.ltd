@@ -21,9 +21,9 @@ export const projects = [
     shortName: "Rocup",
     category: ["CTO", "Community", "App", "Web", "CRM"],
     tagline:
-      "Complete system link community & commerce with shop check-in, rewards, leaderboards, and Shopify and CRM integrations.",
+      "Complete system linking community check-in, rewards, and leaderboards with Shopify e-commerce and CRM integrations.",
     summary:
-      "As CTO of Rocup, the growing fitness brand with partnerships with Gymshark, Redbull, Grenade & Wing Stop, we work on the BAU systems & on the technology touch points that connected engagement mechanics and commerce systems into one complete platform that drives repeat participation, measurable retention and drives sales.",
+      "CTO of Rocup, a growing fitness brand partnered with Gymshark, Redbull, Grenade, and Wing Stop. We work on the business-as-usual (BAU) systems and the technology touch points that connect engagement mechanics and commerce systems into one complete platform that drives repeat participation, measurable retention and drives sales.",
     gradient: "from-zinc-200 via-stone-100 to-orange-100",
     accent: "bg-zinc-900",
     accentColor: "#18181b",
@@ -38,11 +38,9 @@ export const projects = [
       imageClass: "h-auto w-full object-contain",
     },
     highlights: [
-      "Rocup iOS & Andorid App",
-      "CRM",
-      "Check-in gamification",
-      "Reward economy",
-      "Shopify and CRM sync",
+      "Engagement gamification",
+      "Multi-platform support on web & mobile",
+      "Shopify & CRM integration",
     ],
     services: ["Platform UX", "Integration engineering", "Growth loops"],
     showcase: {
@@ -64,9 +62,9 @@ export const projects = [
     shortName: "Guides",
     category: ["Travel Tech", "App", "Web", "QR"],
     tagline:
-      "A self-guided tour platform for web, iOS, and Android with offline-first mobile experiences.",
+      "Using web and mobile native features to provide users with seamless, interactive tour experiences whether they are online or offline.",
     summary:
-      "We designed and built Guides as a trusted travel platform where users can discover self-guided tours, explore landmarks, and continue tours smoothly while offline.",
+      "We founded, designed and built Guides as a trusted travel platform where users can create, discover and experience self-guided tours, anytime, anywhere, whether offline or online.",
     gradient: "from-[#fff5d8] via-[#ffe9ac] to-[#ffd152]",
     accent: "bg-amber-400",
     accentColor: "#ffd152",
@@ -79,15 +77,10 @@ export const projects = [
       alt: "Guides.app logo",
     },
     highlights: [
-      "Self-guided tours by city and landmark",
-      "Offline app support on iOS and Android",
       "Interactive maps and guided audio",
-    ],
-    techStack: [
-      { name: "Python", icon: "FileCode2" },
-      { name: "React", icon: "Atom" },
-      { name: "React Native", icon: "Smartphone" },
-      { name: "AWS", icon: "Cloud" },
+      "Available on web & mobile (iOS & Android)",
+      "Offline app support",
+      "Multilingual support",
     ],
     services: ["Product design", "Platform engineering", "Mobile app delivery"],
     showcase: {
@@ -114,10 +107,9 @@ export const projects = [
         "https://play.google.com/store/apps/details?id=app.guides.mobile&pcampaignid=web_share",
       websiteUrl: "https://guides.app/",
       features: [
-        "Offline access",
-        "Self-guided experiences",
-        "Interactive maps",
-        "Built for exploring",
+        "Mobile native features integration",
+        "Multilingual support",
+        "Offline-enabled experiences",
       ],
     },
   },
@@ -169,7 +161,7 @@ export const projects = [
     tagline:
       "A trading card marketplace with AI card scanning, Stripe payments, and robust database management.",
     summary:
-      "From listing flow to checkout, we delivered a polished marketplace that balances collector-grade detail with fast transaction performance.",
+      "A marketplace for popular trading cards built from the ground up. From listing flow to checkout, we delivered a polished platform that balances collector-grade detail with fast listing and transaction performance.",
     gradient: "from-rose-200 via-orange-100 to-amber-200",
     accent: "bg-rose-600",
     accentColor: "#f43f5e",
@@ -182,7 +174,7 @@ export const projects = [
       chipClass: "border-zinc-900/24 bg-zinc-900",
       imageClass: "h-full w-full object-contain",
     },
-    highlights: ["AI card recognition", "Stripe integration", "Seller inventory tooling"],
+    highlights: ["AI card recognition", "Stripe integration", "External API integrations"],
     services: ["E-commerce build", "Payment integration", "Data modeling"],
     showcase: {
       desktopImage: "/clients/Single.cards_Desktop.png",
@@ -221,9 +213,9 @@ export const projects = [
       alt: "Shrink my House logo",
     },
     highlights: [
-      "Automation-first operations",
-      "CRM-connected forms",
-      "5-star review support",
+      "Operations automations",
+      "CRM-connected funnels",
+      "Review boosting support",
     ],
     services: ["Web build", "CRM integration", "Funnel optimization"],
     showcase: {
@@ -261,9 +253,8 @@ export const projects = [
       imageClass: "h-full w-full object-contain p-1",
     },
     highlights: [
-      "Up-market residential project presentation",
-      "Commercial property pipeline with GBI Gold trajectory",
-      "Brand-led browsing on desktop and mobile",
+      "Premium residential and commercial project showcase",
+      "Brand-driven browsing experience across desktop and mobile",
     ],
     services: ["Web experience design", "Frontend development", "Brand presentation systems"],
     showcase: {
@@ -302,9 +293,9 @@ export const projects = [
       imageClass: "h-auto w-full object-contain",
     },
     highlights: [
-      "Premium package-led event merchandising",
-      "Fast mobile product and cart journey",
-      "Brand-consistent navigation and conversion UX",
+      "Premium event merchandising",
+      "Fast mobile e-commerce journey",
+      "Bespoke branded UX",
     ],
     services: ["E-commerce UX", "Web development", "Conversion optimisation"],
     showcase: {
